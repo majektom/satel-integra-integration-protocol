@@ -1,0 +1,22 @@
+{
+  "name": "satel-integra-integration-protocol",
+  "version": "0.0.1",
+  "description": "Satel Integra integration protocol",
+  "main": "messages.js",
+  "scripts": {
+    "test": "mocha *.test.js",
+    "format:fix": "prettier --write \"**/*.@(ts|js|json|md)\"",
+    "format:validate": "prettier --list-different \"**/*.@(ts|js|json|md)\""
+  },
+  "keywords": [
+    "satel",
+    "integra",
+    "protocol"
+  ],
+  "author": "Tomasz Maj <majektom@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "^7.1.1",
+    "prettier": "2.0.5"
+  }
+}
