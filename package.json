@@ -5,6 +5,7 @@
   "main": "messages.js",
   "scripts": {
     "test": "mocha *.test.js",
+    "cover": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha *.test.js",
     "format:fix": "prettier --write \"**/*.@(ts|js|json|md)\"",
     "format:validate": "prettier --list-different \"**/*.@(ts|js|json|md)\""
   },
@@ -16,6 +17,8 @@
   "author": "Tomasz Maj <majektom@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "coveralls": "^3.1.0",
+    "istanbul": "^0.4.5",
     "mocha": "^7.1.1",
     "prettier": "2.0.5"
   }
