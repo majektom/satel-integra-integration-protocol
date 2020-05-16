@@ -70,6 +70,10 @@ class FlagArrayAnswer {
 
     return true;
   }
+
+  get flags() {
+    return [...this._flags];
+  }
 }
 
 class ZonesViolationAnswer extends FlagArrayAnswer {

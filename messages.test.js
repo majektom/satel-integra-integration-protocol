@@ -44,7 +44,7 @@ describe("Answer messages unit test", () => {
     assert.ok(message instanceof messages.ZonesViolationAnswer);
     for (let i = 0; i < 16; ++i) {
       assert.strictEqual(
-        message._flags[i],
+        message.flags[i],
         i % 2 != 0,
         "for flag with index " + i
       );
@@ -58,7 +58,7 @@ describe("Answer messages unit test", () => {
     assert.ok(message instanceof messages.ZonesViolationAnswer);
     for (let i = 0; i < 32; ++i) {
       assert.strictEqual(
-        message._flags[i],
+        message.flags[i],
         i % 2 != 0,
         "for flag with index " + i
       );
@@ -72,7 +72,7 @@ describe("Answer messages unit test", () => {
     assert.ok(message instanceof messages.ZonesTamperAnswer);
     for (let i = 0; i < 16; ++i) {
       assert.strictEqual(
-        message._flags[i],
+        message.flags[i],
         i % 2 != 0,
         "for flag with index " + i
       );
@@ -86,7 +86,7 @@ describe("Answer messages unit test", () => {
     assert.ok(message instanceof messages.ZonesTamperAnswer);
     for (let i = 0; i < 32; ++i) {
       assert.strictEqual(
-        message._flags[i],
+        message.flags[i],
         i % 2 != 0,
         "for flag with index " + i
       );
@@ -100,7 +100,7 @@ describe("Answer messages unit test", () => {
     assert.ok(message instanceof messages.OutputsStateAnswer);
     for (let i = 0; i < 16; ++i) {
       assert.strictEqual(
-        message._flags[i],
+        message.flags[i],
         i % 2 != 0,
         "for flag with index " + i
       );
@@ -114,7 +114,7 @@ describe("Answer messages unit test", () => {
     assert.ok(message instanceof messages.OutputsStateAnswer);
     for (let i = 0; i < 32; ++i) {
       assert.strictEqual(
-        message._flags[i],
+        message.flags[i],
         i % 2 != 0,
         "for flag with index " + i
       );
