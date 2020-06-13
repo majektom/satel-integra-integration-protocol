@@ -37,6 +37,27 @@ describe("Command messages unit test", () => {
 });
 
 describe("Answer messages unit test", () => {
+  it("decode corrupted frame", () => {
+    const encoder = new Encoder();
+    encoder.addBytes(Buffer.from([0x00].concat(Array(16).fill(0xaa))));
+    const message = messages.decodeMessage(encoder.frame().subarray(0, -1));
+    assert.strictEqual(message, null);
+  });
+
+  it("decode too short frame", () => {
+    const message = messages.decodeMessage(
+      Buffer.from([0xfe, 0xfe, 0x01, 0x02, 0xfe, 0x0d])
+    );
+    assert.strictEqual(message, null);
+  });
+
+  it("decode frame with incorrect CRC", () => {
+    const message = messages.decodeMessage(
+      Buffer.from([0xfe, 0xfe, 0x01, 0x02, 0x03, 0x00, 0x00, 0xfe, 0x0d])
+    );
+    assert.strictEqual(message, null);
+  });
+
   it("decode zones violation answer short", () => {
     const encoder = new Encoder();
     encoder.addBytes(Buffer.from([0x00].concat(Array(16).fill(0xaa))));
@@ -151,14 +172,14 @@ describe("Answer messages unit test", () => {
     assert.strictEqual(message.outputsStateChanged(), true);
   });
 
-  it("decode frame with unsupported command code", () => {
+  it("decode message with unsupported command code", () => {
     const encoder = new Encoder();
     encoder.addBytes(Buffer.from([0x7e, 0x00, 0x00, 0x80, 0x00, 0x00]));
     const message = messages.decodeMessage(encoder.frame());
     assert.strictEqual(message, null);
   });
 
-  it("decode frame of incorrect length", () => {
+  it("decode message of incorrect length", () => {
     const encoder = new Encoder();
     encoder.addBytes(Buffer.from([0x00].concat(Array(17).fill(0xaa))));
     const message = messages.decodeMessage(encoder.frame());
