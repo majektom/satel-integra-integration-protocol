@@ -1,48 +1,22 @@
 const Crc = require("./crc");
 const Decoder = require("./decoder");
 const Encoder = require("./encoder");
+const message_impl = require("./messages_impl")
 
-const Commands = Object.freeze({
-  ZonesViolation: 0x00,
-  ZonesTamper: 0x01,
-  OutputsState: 0x17,
-  NewData: 0x7f,
-});
-
-class NoDataCommand {
-  constructor(command) {
-    this._command = command;
-  }
-
-  encode() {
-    const encoder = new Encoder();
-    encoder.addByte(this._command);
-    return encoder.frame();
-  }
+function encodeZonesViolationCommand() {
+  return message_impl.encodeNoDataCommand(message_impl.Commands.ZonesViolation);
 }
 
-class ZonesViolationCommand extends NoDataCommand {
-  constructor() {
-    super(Commands.ZonesViolation);
-  }
+function encodeZonesTamperCommand() {
+  return message_impl.encodeNoDataCommand(message_impl.Commands.ZonesTamper);
 }
 
-class ZonesTamperCommand extends NoDataCommand {
-  constructor() {
-    super(Commands.ZonesTamper);
-  }
+function encodeOutputsStateCommand() {
+  return message_impl.encodeNoDataCommand(message_impl.Commands.OutputsState);
 }
 
-class OutputsStateCommand extends NoDataCommand {
-  constructor() {
-    super(Commands.OutputsState);
-  }
-}
-
-class NewDataCommand extends NoDataCommand {
-  constructor() {
-    super(Commands.NewData);
-  }
+function encodeNewDataCommand() {
+  return message_impl.encodeNoDataCommand(message_impl.Commands.NewData);
 }
 
 class FlagArrayAnswer {
@@ -100,15 +74,15 @@ class NewDataAnswer extends FlagArrayAnswer {
   }
 
   zonesViolationChanged() {
-    return this._flags[Commands.ZonesViolation];
+    return this._flags[message_impl.Commands.ZonesViolation];
   }
 
   zonesTamperChanged() {
-    return this._flags[Commands.ZonesTamper];
+    return this._flags[message_impl.Commands.ZonesTamper];
   }
 
   outputsStateChanged() {
-    return this._flags[Commands.OutputsState];
+    return this._flags[message_impl.Commands.OutputsState];
   }
 }
 
@@ -145,16 +119,16 @@ function decodeMessage(frame) {
 
   let message;
   switch (decodedFrame[0]) {
-    case Commands.ZonesViolation:
+    case message_impl.Commands.ZonesViolation:
       message = new ZonesViolationAnswer();
       break;
-    case Commands.ZonesTamper:
+    case message_impl.Commands.ZonesTamper:
       message = new ZonesTamperAnswer();
       break;
-    case Commands.OutputsState:
+    case message_impl.Commands.OutputsState:
       message = new OutputsStateAnswer();
       break;
-    case Commands.NewData:
+    case message_impl.Commands.NewData:
       message = new NewDataAnswer();
       break;
     default:
@@ -169,13 +143,13 @@ function decodeMessage(frame) {
 }
 
 module.exports = {
+  encodeZonesViolationCommand,
+  encodeZonesTamperCommand,
+  encodeOutputsStateCommand,
+  encodeNewDataCommand,
   NewDataAnswer,
-  NewDataCommand,
   OutputsStateAnswer,
-  OutputsStateCommand,
   ZonesTamperAnswer,
-  ZonesTamperCommand,
   ZonesViolationAnswer,
-  ZonesViolationCommand,
   decodeMessage,
 };

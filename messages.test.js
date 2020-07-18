@@ -1,38 +1,31 @@
 const assert = require("assert");
 const Encoder = require("./encoder");
 const messages = require("./messages");
+const messages_impl = require("./messages_impl");
 
 describe("Command messages unit test", () => {
   it("encode zones violation command", () => {
-    const command = new messages.ZonesViolationCommand();
-    assert.deepEqual(
-      command.encode(),
-      Buffer.from([0xfe, 0xfe, 0x00, 0xd7, 0xe2, 0xfe, 0x0d])
-    );
+    const frame = messages.encodeZonesViolationCommand();
+    assert.equal(frame.length, 7);
+    assert.deepEqual(frame.subarray(2, 3), Buffer.from([messages_impl.Commands.ZonesViolation]));
   });
 
   it("encode zones tamper command", () => {
-    const command = new messages.ZonesTamperCommand();
-    assert.deepEqual(
-      command.encode(),
-      Buffer.from([0xfe, 0xfe, 0x01, 0xd7, 0xe3, 0xfe, 0x0d])
-    );
+    const frame = messages.encodeZonesTamperCommand();
+    assert.equal(frame.length, 7);
+    assert.deepEqual(frame.subarray(2, 3), Buffer.from([messages_impl.Commands.ZonesTamper]));
   });
 
   it("encode outputs state command", () => {
-    const command = new messages.OutputsStateCommand();
-    assert.deepEqual(
-      command.encode(),
-      Buffer.from([0xfe, 0xfe, 0x17, 0xd7, 0xf9, 0xfe, 0x0d])
-    );
+    const frame = messages.encodeOutputsStateCommand();
+    assert.equal(frame.length, 7);
+    assert.deepEqual(frame.subarray(2, 3), Buffer.from([messages_impl.Commands.OutputsState]));
   });
 
   it("encode new data command", () => {
-    const command = new messages.NewDataCommand();
-    assert.deepEqual(
-      command.encode(),
-      Buffer.from([0xfe, 0xfe, 0x7f, 0xd8, 0x61, 0xfe, 0x0d])
-    );
+    const frame = messages.encodeNewDataCommand();
+    assert.equal(frame.length, 7);
+    assert.deepEqual(frame.subarray(2, 3), Buffer.from([messages_impl.Commands.NewData]));
   });
 });
 
