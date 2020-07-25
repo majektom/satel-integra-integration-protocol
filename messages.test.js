@@ -3,33 +3,148 @@ const Encoder = require("./encoder");
 const messages = require("./messages");
 const messages_impl = require("./messages_impl");
 
-describe("Command messages unit test", () => {
-  it("encode zones violation command", () => {
-    const frame = messages.encodeZonesViolationCommand();
-    assert.equal(frame.length, 7);
-    assert.deepEqual(frame.subarray(2, 3), Buffer.from([messages_impl.Commands.ZonesViolation]));
+describe("Message encoding unit tests", function () {
+  let noDataCommandTests = [
+    {
+      name: "zones violation",
+      func: messages.encodeZonesViolationCommand,
+      command: messages_impl.Commands.ZonesViolation,
+    },
+    {
+      name: "zones tamper",
+      func: messages.encodeZonesTamperCommand,
+      command: messages_impl.Commands.ZonesTamper,
+    },
+    {
+      name: "outputs state",
+      func: messages.encodeOutputsStateCommand,
+      command: messages_impl.Commands.OutputsState,
+    },
+    {
+      name: "new data",
+      func: messages.encodeNewDataCommand,
+      command: messages_impl.Commands.NewData,
+    },
+  ];
+
+  noDataCommandTests.forEach(function (test) {
+    it("encode " + test.name + " command", function () {
+      const frame = test.func();
+      assert.equal(frame.length, 7);
+      assert.equal(frame[2], test.command);
+    });
   });
 
-  it("encode zones tamper command", () => {
-    const frame = messages.encodeZonesTamperCommand();
-    assert.equal(frame.length, 7);
-    assert.deepEqual(frame.subarray(2, 3), Buffer.from([messages_impl.Commands.ZonesTamper]));
-  });
+  let outputsChangeTests = [
+    {
+      name: "outputs on",
+      func: messages.encodeOutputsOnCommand,
+      command: messages_impl.Commands.OutputsOn,
+    },
+    {
+      name: "outputs off",
+      func: messages.encodeOutputsOffCommand,
+      command: messages_impl.Commands.OutputsOff,
+    },
+    {
+      name: "outputs switch",
+      func: messages.encodeOutputsSwitchCommand,
+      command: messages_impl.Commands.OutputsSwitch,
+    },
+  ];
 
-  it("encode outputs state command", () => {
-    const frame = messages.encodeOutputsStateCommand();
-    assert.equal(frame.length, 7);
-    assert.deepEqual(frame.subarray(2, 3), Buffer.from([messages_impl.Commands.OutputsState]));
-  });
+  outputsChangeTests.forEach(function (test) {
+    it("encode short " + test.name + " command", function () {
+      const outputs = new Array(128).fill(false, 0, 128);
+      outputs[0] = true;
+      outputs[2] = true;
+      outputs[61] = true;
+      outputs[119] = true;
+      const frame = test.func("0123456789fffFFF", outputs);
+      assert.equal(frame.length, 31);
+      assert.equal(frame[2], test.command);
+      assert.deepEqual(
+        frame.subarray(3, 11),
+        Buffer.from([0x01, 0x23, 0x45, 0x67, 0x89, 0xff, 0xff, 0xff])
+      );
+      assert.deepEqual(
+        frame.subarray(11, 27),
+        Buffer.from([
+          0x05,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x20,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x80,
+          0x00,
+        ])
+      );
+    });
 
-  it("encode new data command", () => {
-    const frame = messages.encodeNewDataCommand();
-    assert.equal(frame.length, 7);
-    assert.deepEqual(frame.subarray(2, 3), Buffer.from([messages_impl.Commands.NewData]));
+    it("encode long " + test.name + " command", function () {
+      const outputs = new Array(256).fill(false, 0, 128);
+      outputs[0] = true;
+      outputs[2] = true;
+      outputs[61] = true;
+      outputs[254] = true;
+      const frame = test.func("0123456789fffFFF", outputs);
+      assert.equal(frame.length, 47);
+      assert.equal(frame[2], test.command);
+      assert.deepEqual(
+        frame.subarray(3, 11),
+        Buffer.from([0x01, 0x23, 0x45, 0x67, 0x89, 0xff, 0xff, 0xff])
+      );
+      assert.deepEqual(
+        frame.subarray(11, 43),
+        Buffer.from([
+          0x05,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x20,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x40,
+        ])
+      );
+    });
   });
 });
 
-describe("Answer messages unit test", () => {
+describe("Message decoding unit tests", () => {
   it("decode corrupted frame", () => {
     const encoder = new Encoder();
     encoder.addBytes(Buffer.from([0x00].concat(Array(16).fill(0xaa))));
@@ -51,118 +166,93 @@ describe("Answer messages unit test", () => {
     assert.strictEqual(message, null);
   });
 
-  it("decode zones violation answer short", () => {
-    const encoder = new Encoder();
-    encoder.addBytes(Buffer.from([0x00].concat(Array(16).fill(0xaa))));
-    const message = messages.decodeMessage(encoder.frame());
-    assert.ok(message instanceof messages.ZonesViolationAnswer);
-    for (let i = 0; i < 16; ++i) {
-      assert.strictEqual(
-        message.flags[i],
-        i % 2 != 0,
-        "for flag with index " + i
+  let flagArrayAnswerTests = [
+    {
+      name: "zones violation",
+      message: messages.ZonesViolationAnswer,
+      command: messages_impl.Commands.ZonesViolation,
+    },
+    {
+      name: "zones tamper",
+      message: messages.ZonesTamperAnswer,
+      command: messages_impl.Commands.ZonesTamper,
+    },
+    {
+      name: "outputs state",
+      message: messages.OutputsStateAnswer,
+      command: messages_impl.Commands.OutputsState,
+    },
+  ];
+
+  flagArrayAnswerTests.forEach(function (test) {
+    it("decode short " + test.name + " answer", function () {
+      const encoder = new Encoder();
+      encoder.addBytes(
+        Buffer.from([test.command].concat(Array(16).fill(0xaa)))
       );
-    }
-  });
+      const message = messages.decodeMessage(encoder.frame());
+      assert.ok(message instanceof test.message);
+      for (let i = 0; i < 16; ++i) {
+        assert.strictEqual(
+          message.flags[i],
+          i % 2 != 0,
+          "for flag with index " + i
+        );
+      }
+    });
 
-  it("decode zones violation answer long", () => {
-    const encoder = new Encoder();
-    encoder.addBytes(Buffer.from([0x00].concat(Array(32).fill(0xaa))));
-    const message = messages.decodeMessage(encoder.frame());
-    assert.ok(message instanceof messages.ZonesViolationAnswer);
-    for (let i = 0; i < 32; ++i) {
-      assert.strictEqual(
-        message.flags[i],
-        i % 2 != 0,
-        "for flag with index " + i
+    it("decode long " + test.name + " answer", function () {
+      const encoder = new Encoder();
+      encoder.addBytes(
+        Buffer.from([test.command].concat(Array(32).fill(0xaa)))
       );
-    }
+      const message = messages.decodeMessage(encoder.frame());
+      assert.ok(message instanceof test.message);
+      for (let i = 0; i < 16; ++i) {
+        assert.strictEqual(
+          message.flags[i],
+          i % 2 != 0,
+          "for flag with index " + i
+        );
+      }
+    });
   });
 
-  it("decode zones tamper answer short", () => {
-    const encoder = new Encoder();
-    encoder.addBytes(Buffer.from([0x01].concat(Array(16).fill(0xaa))));
-    const message = messages.decodeMessage(encoder.frame());
-    assert.ok(message instanceof messages.ZonesTamperAnswer);
-    for (let i = 0; i < 16; ++i) {
+  let newDataAnswerTests = [
+    { name: "zones violation", command: messages_impl.Commands.ZonesViolation },
+    { name: "zones tamper", command: messages_impl.Commands.ZonesTamper },
+    { name: "outputs state", command: messages_impl.Commands.OutputsState },
+  ];
+
+  newDataAnswerTests.forEach(function (test) {
+    it("decode new data answer, " + test.name + " changed", function () {
+      const encoder = new Encoder();
+      const frame = Buffer.from([
+        messages_impl.Commands.NewData,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+      ]);
+      const index = Math.floor(test.command / 8) + 1;
+      frame[index] = frame[index] | (1 << test.command % 8);
+      encoder.addBytes(frame);
+      const message = messages.decodeMessage(encoder.frame());
+      assert.ok(message instanceof messages.NewDataAnswer);
       assert.strictEqual(
-        message.flags[i],
-        i % 2 != 0,
-        "for flag with index " + i
+        message.zonesViolationChanged(),
+        test.command == messages_impl.Commands.ZonesViolation
       );
-    }
-  });
-
-  it("decode zones tamper answer long", () => {
-    const encoder = new Encoder();
-    encoder.addBytes(Buffer.from([0x01].concat(Array(32).fill(0xaa))));
-    const message = messages.decodeMessage(encoder.frame());
-    assert.ok(message instanceof messages.ZonesTamperAnswer);
-    for (let i = 0; i < 32; ++i) {
       assert.strictEqual(
-        message.flags[i],
-        i % 2 != 0,
-        "for flag with index " + i
+        message.zonesTamperChanged(),
+        test.command == messages_impl.Commands.ZonesTamper
       );
-    }
-  });
-
-  it("decode outputs state answer short", () => {
-    const encoder = new Encoder();
-    encoder.addBytes(Buffer.from([0x17].concat(Array(16).fill(0xaa))));
-    const message = messages.decodeMessage(encoder.frame());
-    assert.ok(message instanceof messages.OutputsStateAnswer);
-    for (let i = 0; i < 16; ++i) {
       assert.strictEqual(
-        message.flags[i],
-        i % 2 != 0,
-        "for flag with index " + i
+        message.outputsStateChanged(),
+        test.command == messages_impl.Commands.OutputsState
       );
-    }
-  });
-
-  it("decode outputs state answer long", () => {
-    const encoder = new Encoder();
-    encoder.addBytes(Buffer.from([0x17].concat(Array(32).fill(0xaa))));
-    const message = messages.decodeMessage(encoder.frame());
-    assert.ok(message instanceof messages.OutputsStateAnswer);
-    for (let i = 0; i < 32; ++i) {
-      assert.strictEqual(
-        message.flags[i],
-        i % 2 != 0,
-        "for flag with index " + i
-      );
-    }
-  });
-
-  it("decode new data answer, zones violation changed", () => {
-    const encoder = new Encoder();
-    encoder.addBytes(Buffer.from([0x7f, 0x01, 0x00, 0x00, 0x00, 0x00]));
-    const message = messages.decodeMessage(encoder.frame());
-    assert.ok(message instanceof messages.NewDataAnswer);
-    assert.strictEqual(message.zonesViolationChanged(), true);
-    assert.strictEqual(message.zonesTamperChanged(), false);
-    assert.strictEqual(message.outputsStateChanged(), false);
-  });
-
-  it("decode new data answer, zones tamper changed", () => {
-    const encoder = new Encoder();
-    encoder.addBytes(Buffer.from([0x7f, 0x02, 0x00, 0x00, 0x00, 0x00]));
-    const message = messages.decodeMessage(encoder.frame());
-    assert.ok(message instanceof messages.NewDataAnswer);
-    assert.strictEqual(message.zonesViolationChanged(), false);
-    assert.strictEqual(message.zonesTamperChanged(), true);
-    assert.strictEqual(message.outputsStateChanged(), false);
-  });
-
-  it("decode new data answer, outputs state changed", () => {
-    const encoder = new Encoder();
-    encoder.addBytes(Buffer.from([0x7f, 0x00, 0x00, 0x80, 0x00, 0x00]));
-    const message = messages.decodeMessage(encoder.frame());
-    assert.ok(message instanceof messages.NewDataAnswer);
-    assert.strictEqual(message.zonesViolationChanged(), false);
-    assert.strictEqual(message.zonesTamperChanged(), false);
-    assert.strictEqual(message.outputsStateChanged(), true);
+    });
   });
 
   it("decode message with unsupported command code", () => {

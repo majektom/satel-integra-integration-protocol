@@ -1,7 +1,7 @@
 const Crc = require("./crc");
 const Decoder = require("./decoder");
 const Encoder = require("./encoder");
-const message_impl = require("./messages_impl")
+const message_impl = require("./messages_impl");
 
 function encodeZonesViolationCommand() {
   return message_impl.encodeNoDataCommand(message_impl.Commands.ZonesViolation);
@@ -17,6 +17,30 @@ function encodeOutputsStateCommand() {
 
 function encodeNewDataCommand() {
   return message_impl.encodeNoDataCommand(message_impl.Commands.NewData);
+}
+
+function encodeOutputsOnCommand(prefixAndUserCode, outputs) {
+  return message_impl.encodeChangeOutputsCommand(
+    message_impl.Commands.OutputsOn,
+    prefixAndUserCode,
+    outputs
+  );
+}
+
+function encodeOutputsOffCommand(prefixAndUserCode, outputs) {
+  return message_impl.encodeChangeOutputsCommand(
+    message_impl.Commands.OutputsOff,
+    prefixAndUserCode,
+    outputs
+  );
+}
+
+function encodeOutputsSwitchCommand(prefixAndUserCode, outputs) {
+  return message_impl.encodeChangeOutputsCommand(
+    message_impl.Commands.OutputsSwitch,
+    prefixAndUserCode,
+    outputs
+  );
 }
 
 class FlagArrayAnswer {
@@ -143,13 +167,16 @@ function decodeMessage(frame) {
 }
 
 module.exports = {
-  encodeZonesViolationCommand,
-  encodeZonesTamperCommand,
-  encodeOutputsStateCommand,
+  decodeMessage,
   encodeNewDataCommand,
+  encodeOutputsOffCommand,
+  encodeOutputsOnCommand,
+  encodeOutputsStateCommand,
+  encodeOutputsSwitchCommand,
+  encodeZonesTamperCommand,
+  encodeZonesViolationCommand,
   NewDataAnswer,
   OutputsStateAnswer,
   ZonesTamperAnswer,
   ZonesViolationAnswer,
-  decodeMessage,
 };
