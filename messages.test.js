@@ -319,6 +319,18 @@ describe("Message decoding unit tests", () => {
     });
   });
 
+  it("decode command result answer message of incorrect length", function () {
+    const encoder = new Encoder();
+    const frame = Buffer.from([
+      messages_impl.Commands.CommandResult,
+      messages.CommandResultAnswer.ResultCodes.OK,
+      0x00,
+    ]);
+    encoder.addBytes(frame);
+    const message = messages.decodeMessage(encoder.frame());
+    assert.strictEqual(message, null);
+  });
+
   it("decode message with unsupported command code", () => {
     const encoder = new Encoder();
     encoder.addBytes(Buffer.from([0x7e, 0x00, 0x00, 0x80, 0x00, 0x00]));
