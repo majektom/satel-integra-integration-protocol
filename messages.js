@@ -111,21 +111,6 @@ class NewDataAnswer extends FlagArrayAnswer {
 }
 
 class CommandResultAnswer {
-  static ResultCodes = Object.freeze({
-    OK: 0x00,
-    UserCodeNotFound: 0x01,
-    NoAccess: 0x02,
-    UserDoesNotExist: 0x03,
-    UserAlreadyExists: 0x04,
-    WrongOrAlreadyExistingCode: 0x05,
-    TelephoneCodeAlreadyExists: 0x06,
-    ChangedCodeIsTheSame: 0x07,
-    OtherError: 0x08,
-    CannotArmButCanForceArm: 0x11,
-    CannotArm: 0x12,
-    CommandAccepted: 0xff,
-  });
-
   decode(frame) {
     if (frame.length != 1) {
       return false;
@@ -183,6 +168,21 @@ class CommandResultAnswer {
     return this._resultMessage;
   }
 }
+
+CommandResultAnswer.ResultCodes = Object.freeze({
+  OK: 0x00,
+  UserCodeNotFound: 0x01,
+  NoAccess: 0x02,
+  UserDoesNotExist: 0x03,
+  UserAlreadyExists: 0x04,
+  WrongOrAlreadyExistingCode: 0x05,
+  TelephoneCodeAlreadyExists: 0x06,
+  ChangedCodeIsTheSame: 0x07,
+  OtherError: 0x08,
+  CannotArmButCanForceArm: 0x11,
+  CannotArm: 0x12,
+  CommandAccepted: 0xff,
+});
 
 function decodeMessage(frame) {
   const decoder = new Decoder();
