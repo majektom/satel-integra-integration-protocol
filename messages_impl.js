@@ -10,6 +10,7 @@ const Commands = Object.freeze({
   OutputsOn: 0x88,
   OutputsOff: 0x89,
   OutputsSwitch: 0x91,
+  CommandResult: 0xef,
 });
 
 function encodeNoDataCommand(command) {

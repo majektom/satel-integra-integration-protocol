@@ -255,6 +255,70 @@ describe("Message decoding unit tests", () => {
     });
   });
 
+  let commandResultAnswerTests = [
+    { code: messages.CommandResultAnswer.ResultCodes.OK, message: "OK" },
+    {
+      code: messages.CommandResultAnswer.ResultCodes.UserCodeNotFound,
+      message: "Requesting user code not found",
+    },
+    {
+      code: messages.CommandResultAnswer.ResultCodes.NoAccess,
+      message: "No access",
+    },
+    {
+      code: messages.CommandResultAnswer.ResultCodes.UserDoesNotExist,
+      message: "Selected user does not exist",
+    },
+    {
+      code: messages.CommandResultAnswer.ResultCodes.UserAlreadyExists,
+      message: "Selected user already exists",
+    },
+    {
+      code: messages.CommandResultAnswer.ResultCodes.WrongOrAlreadyExistingCode,
+      message: "Wrong code or code already exists",
+    },
+    {
+      code: messages.CommandResultAnswer.ResultCodes.TelephoneCodeAlreadyExists,
+      message: "Telephone code already exists",
+    },
+    {
+      code: messages.CommandResultAnswer.ResultCodes.ChangedCodeIsTheSame,
+      message: "Changed code is the same",
+    },
+    {
+      code: messages.CommandResultAnswer.ResultCodes.OtherError,
+      message: "Other error",
+    },
+    {
+      code: messages.CommandResultAnswer.ResultCodes.CannotArmButCanForceArm,
+      message: "Cannot arm, but can use force arm",
+    },
+    {
+      code: messages.CommandResultAnswer.ResultCodes.CannotArm,
+      message: "Cannot arm",
+    },
+    {
+      code: messages.CommandResultAnswer.ResultCodes.CommandAccepted,
+      message: "Command accepted",
+    },
+    { code: 0xee, message: "Unknown result code" },
+  ];
+
+  commandResultAnswerTests.forEach(function (test) {
+    it("decode '" + test.message + "' command result answer", function () {
+      const encoder = new Encoder();
+      const frame = Buffer.from([
+        messages_impl.Commands.CommandResult,
+        test.code,
+      ]);
+      encoder.addBytes(frame);
+      const message = messages.decodeMessage(encoder.frame());
+      assert.ok(message instanceof messages.CommandResultAnswer);
+      assert.strictEqual(message.resultCode, test.code);
+      assert.strictEqual(message.resultMessage, test.message);
+    });
+  });
+
   it("decode message with unsupported command code", () => {
     const encoder = new Encoder();
     encoder.addBytes(Buffer.from([0x7e, 0x00, 0x00, 0x80, 0x00, 0x00]));

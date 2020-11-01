@@ -110,6 +110,80 @@ class NewDataAnswer extends FlagArrayAnswer {
   }
 }
 
+class CommandResultAnswer {
+  static ResultCodes = Object.freeze({
+    OK: 0x00,
+    UserCodeNotFound: 0x01,
+    NoAccess: 0x02,
+    UserDoesNotExist: 0x03,
+    UserAlreadyExists: 0x04,
+    WrongOrAlreadyExistingCode: 0x05,
+    TelephoneCodeAlreadyExists: 0x06,
+    ChangedCodeIsTheSame: 0x07,
+    OtherError: 0x08,
+    CannotArmButCanForceArm: 0x11,
+    CannotArm: 0x12,
+    CommandAccepted: 0xff,
+  });
+
+  decode(frame) {
+    if (frame.length != 1) {
+      return false;
+    }
+    this._resultCode = frame[0];
+    switch (this._resultCode) {
+      case CommandResultAnswer.ResultCodes.OK:
+        this._resultMessage = "OK";
+        break;
+      case CommandResultAnswer.ResultCodes.UserCodeNotFound:
+        this._resultMessage = "Requesting user code not found";
+        break;
+      case CommandResultAnswer.ResultCodes.NoAccess:
+        this._resultMessage = "No access";
+        break;
+      case CommandResultAnswer.ResultCodes.UserDoesNotExist:
+        this._resultMessage = "Selected user does not exist";
+        break;
+      case CommandResultAnswer.ResultCodes.UserAlreadyExists:
+        this._resultMessage = "Selected user already exists";
+        break;
+      case CommandResultAnswer.ResultCodes.WrongOrAlreadyExistingCode:
+        this._resultMessage = "Wrong code or code already exists";
+        break;
+      case CommandResultAnswer.ResultCodes.TelephoneCodeAlreadyExists:
+        this._resultMessage = "Telephone code already exists";
+        break;
+      case CommandResultAnswer.ResultCodes.ChangedCodeIsTheSame:
+        this._resultMessage = "Changed code is the same";
+        break;
+      case CommandResultAnswer.ResultCodes.OtherError:
+        this._resultMessage = "Other error";
+        break;
+      case CommandResultAnswer.ResultCodes.CannotArmButCanForceArm:
+        this._resultMessage = "Cannot arm, but can use force arm";
+        break;
+      case CommandResultAnswer.ResultCodes.CannotArm:
+        this._resultMessage = "Cannot arm";
+        break;
+      case CommandResultAnswer.ResultCodes.CommandAccepted:
+        this._resultMessage = "Command accepted";
+        break;
+      default:
+        this._resultMessage = "Unknown result code";
+        break;
+    }
+    return true;
+  }
+
+  get resultCode() {
+    return this._resultCode;
+  }
+
+  get resultMessage() {
+    return this._resultMessage;
+  }
+}
+
 function decodeMessage(frame) {
   const decoder = new Decoder();
   let decoded = false;
@@ -155,6 +229,9 @@ function decodeMessage(frame) {
     case message_impl.Commands.NewData:
       message = new NewDataAnswer();
       break;
+    case message_impl.Commands.CommandResult:
+      message = new CommandResultAnswer();
+      break;
     default:
       return null;
   }
@@ -175,6 +252,7 @@ module.exports = {
   encodeOutputsSwitchCommand,
   encodeZonesTamperCommand,
   encodeZonesViolationCommand,
+  CommandResultAnswer,
   NewDataAnswer,
   OutputsStateAnswer,
   ZonesTamperAnswer,
