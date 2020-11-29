@@ -7,8 +7,11 @@ const Commands = Object.freeze({
   ZonesTamper: 0x01,
   OutputsState: 0x17,
   NewData: 0x7f,
+  ZonesBypass: 0x86,
+  ZonesUnbypass: 0x87,
   OutputsOn: 0x88,
   OutputsOff: 0x89,
+  ZonesIsolate: 0x90,
   OutputsSwitch: 0x91,
   CommandResult: 0xef,
 });
@@ -41,7 +44,7 @@ function prefixAndUserCodeStringToBuffer(prefixAndUserCode) {
   return buffer;
 }
 
-function outputsArrayToBuffer(outputs) {
+function flagsArrayToBuffer(outputs) {
   if (!Array.isArray(outputs)) {
     throw "'outputs' must be an array";
   }
@@ -65,18 +68,18 @@ function outputsArrayToBuffer(outputs) {
   return buffer;
 }
 
-function encodeChangeOutputsCommand(command, prefixAndUserCode, outputs) {
+function encodeFlagsArrayWithCodeCommand(command, prefixAndUserCode, outputs) {
   const encoder = new Encoder();
   encoder.addByte(command);
   encoder.addBytes(prefixAndUserCodeStringToBuffer(prefixAndUserCode));
-  encoder.addBytes(outputsArrayToBuffer(outputs));
+  encoder.addBytes(flagsArrayToBuffer(outputs));
   return encoder.frame();
 }
 
 module.exports = {
   Commands,
-  encodeChangeOutputsCommand,
+  encodeFlagsArrayWithCodeCommand,
   encodeNoDataCommand,
-  outputsArrayToBuffer,
+  flagsArrayToBuffer,
   prefixAndUserCodeStringToBuffer,
 };

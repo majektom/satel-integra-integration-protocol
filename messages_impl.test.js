@@ -79,7 +79,7 @@ describe("Messages private implementation unit tests", function () {
     );
   });
 
-  let outputsArrayToBufferTests = [
+  let flagsArrayToBufferTests = [
     {
       name: "short",
       length: 128,
@@ -90,46 +90,46 @@ describe("Messages private implementation unit tests", function () {
     },
   ];
 
-  outputsArrayToBufferTests.forEach(function (test) {
-    it("outputsArrayToBuffer, " + test.name + " array", function () {
+  flagsArrayToBufferTests.forEach(function (test) {
+    it("flagsArrayToBuffer, " + test.name + " array", function () {
       const array = new Array(test.length).fill(false);
       for (let i = 1; i < array.length; i += 2) {
         array[i] = true;
       }
-      expect(messages_impl.outputsArrayToBuffer(array)).to.deep.equal(
+      expect(messages_impl.flagsArrayToBuffer(array)).to.deep.equal(
         Buffer.alloc(test.length / 8, 0xaa)
       );
     });
   });
 
-  it("outputsArrayToBuffer, not an array", function () {
-    const outputsArrayToBuffer = messages_impl.outputsArrayToBuffer;
-    expect(outputsArrayToBuffer.bind(outputsArrayToBuffer, 42)).to.throw(
+  it("flagsArrayToBuffer, not an array", function () {
+    const flagsArrayToBuffer = messages_impl.flagsArrayToBuffer;
+    expect(flagsArrayToBuffer.bind(flagsArrayToBuffer, 42)).to.throw(
       RegExp("must be an array")
     );
     expect(
-      outputsArrayToBuffer.bind(outputsArrayToBuffer, {
+      flagsArrayToBuffer.bind(flagsArrayToBuffer, {
         code: "0123456789012345",
       })
     ).to.throw(RegExp("must be an array"));
-    expect(
-      outputsArrayToBuffer.bind(outputsArrayToBuffer, "11110001111")
-    ).to.throw(RegExp("must be an array"));
-    expect(outputsArrayToBuffer.bind(outputsArrayToBuffer, true)).to.throw(
+    expect(flagsArrayToBuffer.bind(flagsArrayToBuffer, "11110001111")).to.throw(
       RegExp("must be an array")
     );
-    expect(outputsArrayToBuffer.bind(outputsArrayToBuffer, null)).to.throw(
+    expect(flagsArrayToBuffer.bind(flagsArrayToBuffer, true)).to.throw(
+      RegExp("must be an array")
+    );
+    expect(flagsArrayToBuffer.bind(flagsArrayToBuffer, null)).to.throw(
       RegExp("must be an array")
     );
   });
 
-  it("outputsArrayToBuffer, wrong length", function () {
-    const outputsArrayToBuffer = messages_impl.outputsArrayToBuffer;
-    expect(
-      outputsArrayToBuffer.bind(outputsArrayToBuffer, Array(127))
-    ).to.throw(RegExp("must have 128 or 256 elements"));
-    expect(
-      outputsArrayToBuffer.bind(outputsArrayToBuffer, Array(255))
-    ).to.throw(RegExp("must have 128 or 256 elements"));
+  it("flagsArrayToBuffer, wrong length", function () {
+    const flagsArrayToBuffer = messages_impl.flagsArrayToBuffer;
+    expect(flagsArrayToBuffer.bind(flagsArrayToBuffer, Array(127))).to.throw(
+      RegExp("must have 128 or 256 elements")
+    );
+    expect(flagsArrayToBuffer.bind(flagsArrayToBuffer, Array(255))).to.throw(
+      RegExp("must have 128 or 256 elements")
+    );
   });
 });

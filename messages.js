@@ -20,7 +20,7 @@ function encodeNewDataCommand() {
 }
 
 function encodeOutputsOnCommand(prefixAndUserCode, outputs) {
-  return message_impl.encodeChangeOutputsCommand(
+  return message_impl.encodeFlagsArrayWithCodeCommand(
     message_impl.Commands.OutputsOn,
     prefixAndUserCode,
     outputs
@@ -28,7 +28,7 @@ function encodeOutputsOnCommand(prefixAndUserCode, outputs) {
 }
 
 function encodeOutputsOffCommand(prefixAndUserCode, outputs) {
-  return message_impl.encodeChangeOutputsCommand(
+  return message_impl.encodeFlagsArrayWithCodeCommand(
     message_impl.Commands.OutputsOff,
     prefixAndUserCode,
     outputs
@@ -36,10 +36,34 @@ function encodeOutputsOffCommand(prefixAndUserCode, outputs) {
 }
 
 function encodeOutputsSwitchCommand(prefixAndUserCode, outputs) {
-  return message_impl.encodeChangeOutputsCommand(
+  return message_impl.encodeFlagsArrayWithCodeCommand(
     message_impl.Commands.OutputsSwitch,
     prefixAndUserCode,
     outputs
+  );
+}
+
+function encodeZonesBypassCommand(prefixAndUserCode, zones) {
+  return message_impl.encodeFlagsArrayWithCodeCommand(
+    message_impl.Commands.ZonesBypass,
+    prefixAndUserCode,
+    zones
+  );
+}
+
+function encodeZonesUnbypassCommand(prefixAndUserCode, zones) {
+  return message_impl.encodeFlagsArrayWithCodeCommand(
+    message_impl.Commands.ZonesUnbypass,
+    prefixAndUserCode,
+    zones
+  );
+}
+
+function encodeZonesIsolateCommand(prefixAndUserCode, zones) {
+  return message_impl.encodeFlagsArrayWithCodeCommand(
+    message_impl.Commands.ZonesIsolate,
+    prefixAndUserCode,
+    zones
   );
 }
 
@@ -250,7 +274,10 @@ module.exports = {
   encodeOutputsOnCommand,
   encodeOutputsStateCommand,
   encodeOutputsSwitchCommand,
+  encodeZonesBypassCommand,
+  encodeZonesIsolateCommand,
   encodeZonesTamperCommand,
+  encodeZonesUnbypassCommand,
   encodeZonesViolationCommand,
   CommandResultAnswer,
   NewDataAnswer,

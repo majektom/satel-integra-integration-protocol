@@ -35,7 +35,7 @@ describe("Message encoding unit tests", function () {
     });
   });
 
-  let outputsChangeTests = [
+  let outputsAndZonesChangeTests = [
     {
       name: "outputs on",
       func: messages.encodeOutputsOnCommand,
@@ -51,9 +51,24 @@ describe("Message encoding unit tests", function () {
       func: messages.encodeOutputsSwitchCommand,
       command: messages_impl.Commands.OutputsSwitch,
     },
+    {
+      name: "zones bypass",
+      func: messages.encodeZonesBypassCommand,
+      command: messages_impl.Commands.ZonesBypass,
+    },
+    {
+      name: "zones unbypass",
+      func: messages.encodeZonesUnbypassCommand,
+      command: messages_impl.Commands.ZonesUnbypass,
+    },
+    {
+      name: "zones isolate",
+      func: messages.encodeZonesIsolateCommand,
+      command: messages_impl.Commands.ZonesIsolate,
+    },
   ];
 
-  outputsChangeTests.forEach(function (test) {
+  outputsAndZonesChangeTests.forEach(function (test) {
     it("encode short " + test.name + " command", function () {
       const outputs = new Array(128).fill(false, 0, 128);
       outputs[0] = true;
@@ -61,7 +76,7 @@ describe("Message encoding unit tests", function () {
       outputs[61] = true;
       outputs[119] = true;
       const frame = test.func("0123456789fffFFF", outputs);
-      assert.equal(frame.length, 31);
+      assert(frame.length >= 31);
       assert.equal(frame[2], test.command);
       assert.deepEqual(
         frame.subarray(3, 11),
