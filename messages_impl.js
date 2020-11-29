@@ -44,35 +44,35 @@ function prefixAndUserCodeStringToBuffer(prefixAndUserCode) {
   return buffer;
 }
 
-function flagsArrayToBuffer(outputs) {
-  if (!Array.isArray(outputs)) {
-    throw "'outputs' must be an array";
+function flagsArrayToBuffer(flags) {
+  if (!Array.isArray(flags)) {
+    throw "'flags' must be an array";
   }
-  const outputsLength = 16 * 8;
-  const outputsLongLength = 32 * 8;
-  if (outputs.length != outputsLength && outputs.length != outputsLongLength) {
+  const flagsLength = 16 * 8;
+  const flagsLongLength = 32 * 8;
+  if (flags.length != flagsLength && flags.length != flagsLongLength) {
     throw (
-      "'outputs' array must have " +
-      outputsLength +
+      "'flags' array must have " +
+      flagsLength +
       " or " +
-      outputsLongLength +
+      flagsLongLength +
       " elements"
     );
   }
-  const buffer = Buffer.alloc(outputs.length / 8, 0);
-  for (var i = 0; i < outputs.length; ++i) {
-    const flag = outputs[i];
+  const buffer = Buffer.alloc(flags.length / 8, 0);
+  for (var i = 0; i < flags.length; ++i) {
+    const flag = flags[i];
     const bufferIndex = Math.floor(i / 8);
     buffer[bufferIndex] = (buffer[bufferIndex] >> 1) | (flag ? 0x80 : 0);
   }
   return buffer;
 }
 
-function encodeFlagsArrayWithCodeCommand(command, prefixAndUserCode, outputs) {
+function encodeFlagsArrayWithCodeCommand(command, prefixAndUserCode, flags) {
   const encoder = new Encoder();
   encoder.addByte(command);
   encoder.addBytes(prefixAndUserCodeStringToBuffer(prefixAndUserCode));
-  encoder.addBytes(flagsArrayToBuffer(outputs));
+  encoder.addBytes(flagsArrayToBuffer(flags));
   return encoder.frame();
 }
 
