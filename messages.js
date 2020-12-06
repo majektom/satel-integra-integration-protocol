@@ -11,6 +11,62 @@ function encodeZonesTamperCommand() {
   return message_impl.encodeNoDataCommand(message_impl.Commands.ZonesTamper);
 }
 
+function encodeZonesAlarmCommand() {
+  return message_impl.encodeNoDataCommand(message_impl.Commands.ZonesAlarm);
+}
+
+function encodeZonesTamperAlarmCommand() {
+  return message_impl.encodeNoDataCommand(
+    message_impl.Commands.ZonesTamperAlarm
+  );
+}
+
+function encodeZonesAlarmMemoryCommand() {
+  return message_impl.encodeNoDataCommand(
+    message_impl.Commands.ZonesAlarmMemory
+  );
+}
+
+function encodeZonesTamperAlarmMemoryCommand() {
+  return message_impl.encodeNoDataCommand(
+    message_impl.Commands.ZonesTamperAlarmMemory
+  );
+}
+
+function encodeZonesBypassStatusCommand() {
+  return message_impl.encodeNoDataCommand(
+    message_impl.Commands.ZonesBypassStatus
+  );
+}
+
+function encodeZonesNoViolationTroubleCommand() {
+  return message_impl.encodeNoDataCommand(
+    message_impl.Commands.ZonesNoViolationTrouble
+  );
+}
+
+function encodeZonesLongViolationTroubleCommand() {
+  return message_impl.encodeNoDataCommand(
+    message_impl.Commands.ZonesLongViolationTrouble
+  );
+}
+
+function encodeZonesIsolateStateCommand() {
+  return message_impl.encodeNoDataCommand(
+    message_impl.Commands.ZonesIsolateState
+  );
+}
+
+function encodeZonesMaskedCommand() {
+  return message_impl.encodeNoDataCommand(message_impl.Commands.ZonesMasked);
+}
+
+function encodeZonesMaskedMemoryCommand() {
+  return message_impl.encodeNoDataCommand(
+    message_impl.Commands.ZonesMaskedMemory
+  );
+}
+
 function encodeOutputsStateCommand() {
   return message_impl.encodeNoDataCommand(message_impl.Commands.OutputsState);
 }
@@ -68,17 +124,16 @@ function encodeZonesIsolateCommand(prefixAndUserCode, zones) {
 }
 
 class FlagArrayAnswer {
-  constructor(length, longLength = undefined) {
-    this._length = length;
-    this._longLength = longLength;
+  constructor(allowedLengths) {
+    this._allowedLengths = allowedLengths;
     this._flags = [];
   }
 
   decode(frame) {
     if (
-      frame.length != this._length &&
-      typeof this._longLength != undefined &&
-      frame.length != this._longLength
+      this._allowedLengths.every(function (allowedLength) {
+        return allowedLength != frame.length;
+      })
     ) {
       return false;
     }
@@ -100,25 +155,85 @@ class FlagArrayAnswer {
 
 class ZonesViolationAnswer extends FlagArrayAnswer {
   constructor() {
-    super(16, 32);
+    super([16, 32]);
   }
 }
 
 class ZonesTamperAnswer extends FlagArrayAnswer {
   constructor() {
-    super(16, 32);
+    super([16, 32]);
   }
 }
 
 class OutputsStateAnswer extends FlagArrayAnswer {
   constructor() {
-    super(16, 32);
+    super([16, 32]);
+  }
+}
+
+class ZonesAlarmAnswer extends FlagArrayAnswer {
+  constructor() {
+    super([16, 32]);
+  }
+}
+
+class ZonesTamperAlarmAnswer extends FlagArrayAnswer {
+  constructor() {
+    super([16, 32]);
+  }
+}
+
+class ZonesAlarmMemoryAnswer extends FlagArrayAnswer {
+  constructor() {
+    super([16, 32]);
+  }
+}
+
+class ZonesTamperAlarmMemoryAnswer extends FlagArrayAnswer {
+  constructor() {
+    super([16, 32]);
+  }
+}
+
+class ZonesBypassStatusAnswer extends FlagArrayAnswer {
+  constructor() {
+    super([16, 32]);
+  }
+}
+
+class ZonesNoViolationTroubleAnswer extends FlagArrayAnswer {
+  constructor() {
+    super([16, 32]);
+  }
+}
+
+class ZonesLongViolationTroubleAnswer extends FlagArrayAnswer {
+  constructor() {
+    super([16, 32]);
+  }
+}
+
+class ZonesIsolateStateAnswer extends FlagArrayAnswer {
+  constructor() {
+    super([16, 32]);
+  }
+}
+
+class ZonesMaskedAnswer extends FlagArrayAnswer {
+  constructor() {
+    super([16, 32]);
+  }
+}
+
+class ZonesMaskedMemoryAnswer extends FlagArrayAnswer {
+  constructor() {
+    super([16, 32]);
   }
 }
 
 class NewDataAnswer extends FlagArrayAnswer {
   constructor() {
-    super(5);
+    super([5, 6, 7]);
   }
 
   zonesViolationChanged() {
@@ -131,6 +246,46 @@ class NewDataAnswer extends FlagArrayAnswer {
 
   outputsStateChanged() {
     return this._flags[message_impl.Commands.OutputsState];
+  }
+
+  zonesAlarmChanged() {
+    return this._flags[message_impl.Commands.ZonesAlarm];
+  }
+
+  zonesTamperAlarmChanged() {
+    return this._flags[message_impl.Commands.ZonesTamperAlarm];
+  }
+
+  zonesAlarmMemoryChanged() {
+    return this._flags[message_impl.Commands.ZonesAlarmMemory];
+  }
+
+  zonesTamperAlarmMemoryChanged() {
+    return this._flags[message_impl.Commands.ZonesTamperAlarmMemory];
+  }
+
+  zonesBypassStatusChanged() {
+    return this._flags[message_impl.Commands.ZonesBypassStatus];
+  }
+
+  zonesNoViolationTroubleChanged() {
+    return this._flags[message_impl.Commands.ZonesNoViolationTrouble];
+  }
+
+  zonesLongViolationTroubleChanged() {
+    return this._flags[message_impl.Commands.ZonesLongViolationTrouble];
+  }
+
+  zonesIsolateStateChanged() {
+    return this._flags[message_impl.Commands.ZonesIsolateState];
+  }
+
+  zonesMaskedChanged() {
+    return this._flags[message_impl.Commands.ZonesMasked];
+  }
+
+  zonesMaskedMemoryChanged() {
+    return this._flags[message_impl.Commands.ZonesMaskedMemory];
   }
 }
 
@@ -256,6 +411,36 @@ function decodeMessage(frame) {
     case message_impl.Commands.CommandResult:
       message = new CommandResultAnswer();
       break;
+    case message_impl.Commands.ZonesAlarm:
+      message = new ZonesAlarmAnswer();
+      break;
+    case message_impl.Commands.ZonesTamperAlarm:
+      message = new ZonesTamperAlarmAnswer();
+      break;
+    case message_impl.Commands.ZonesAlarmMemory:
+      message = new ZonesAlarmMemoryAnswer();
+      break;
+    case message_impl.Commands.ZonesTamperAlarmMemory:
+      message = new ZonesTamperAlarmMemoryAnswer();
+      break;
+    case message_impl.Commands.ZonesBypassStatus:
+      message = new ZonesBypassStatusAnswer();
+      break;
+    case message_impl.Commands.ZonesNoViolationTrouble:
+      message = new ZonesNoViolationTroubleAnswer();
+      break;
+    case message_impl.Commands.ZonesLongViolationTrouble:
+      message = new ZonesLongViolationTroubleAnswer();
+      break;
+    case message_impl.Commands.ZonesIsolateState:
+      message = new ZonesIsolateStateAnswer();
+      break;
+    case message_impl.Commands.ZonesMasked:
+      message = new ZonesMaskedAnswer();
+      break;
+    case message_impl.Commands.ZonesMaskedMemory:
+      message = new ZonesMaskedMemoryAnswer();
+      break;
     default:
       return null;
   }
@@ -274,14 +459,34 @@ module.exports = {
   encodeOutputsOnCommand,
   encodeOutputsStateCommand,
   encodeOutputsSwitchCommand,
+  encodeZonesAlarmCommand,
+  encodeZonesAlarmMemoryCommand,
   encodeZonesBypassCommand,
+  encodeZonesBypassStatusCommand,
   encodeZonesIsolateCommand,
+  encodeZonesIsolateStateCommand,
+  encodeZonesLongViolationTroubleCommand,
+  encodeZonesMaskedCommand,
+  encodeZonesMaskedMemoryCommand,
+  encodeZonesNoViolationTroubleCommand,
+  encodeZonesTamperAlarmCommand,
+  encodeZonesTamperAlarmMemoryCommand,
   encodeZonesTamperCommand,
   encodeZonesUnbypassCommand,
   encodeZonesViolationCommand,
   CommandResultAnswer,
   NewDataAnswer,
   OutputsStateAnswer,
+  ZonesAlarmAnswer,
+  ZonesAlarmMemoryAnswer,
+  ZonesBypassStatusAnswer,
+  ZonesIsolateStateAnswer,
+  ZonesLongViolationTroubleAnswer,
+  ZonesMaskedAnswer,
+  ZonesMaskedMemoryAnswer,
+  ZonesNoViolationTroubleAnswer,
+  ZonesTamperAlarmAnswer,
+  ZonesTamperAlarmMemoryAnswer,
   ZonesTamperAnswer,
   ZonesViolationAnswer,
 };

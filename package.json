@@ -1,6 +1,6 @@
 {
   "name": "satel-integra-integration-protocol",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "Satel Integra integration protocol",
   "main": "messages.js",
   "scripts": {

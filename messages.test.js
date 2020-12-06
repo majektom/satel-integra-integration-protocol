@@ -6,29 +6,65 @@ const messages_impl = require("./messages_impl");
 describe("Message encoding unit tests", function () {
   let noDataCommandTests = [
     {
-      name: "zones violation",
       func: messages.encodeZonesViolationCommand,
       command: messages_impl.Commands.ZonesViolation,
     },
     {
-      name: "zones tamper",
       func: messages.encodeZonesTamperCommand,
       command: messages_impl.Commands.ZonesTamper,
     },
     {
-      name: "outputs state",
       func: messages.encodeOutputsStateCommand,
       command: messages_impl.Commands.OutputsState,
     },
     {
-      name: "new data",
       func: messages.encodeNewDataCommand,
       command: messages_impl.Commands.NewData,
+    },
+    {
+      func: messages.encodeZonesAlarmCommand,
+      command: messages_impl.Commands.ZonesAlarm,
+    },
+    {
+      func: messages.encodeZonesTamperAlarmCommand,
+      command: messages_impl.Commands.ZonesTamperAlarm,
+    },
+    {
+      func: messages.encodeZonesAlarmMemoryCommand,
+      command: messages_impl.Commands.ZonesAlarmMemory,
+    },
+    {
+      func: messages.encodeZonesTamperAlarmMemoryCommand,
+      command: messages_impl.Commands.ZonesTamperAlarmMemory,
+    },
+    {
+      func: messages.encodeZonesBypassStatusCommand,
+      command: messages_impl.Commands.ZonesBypassStatus,
+    },
+    {
+      func: messages.encodeZonesNoViolationTroubleCommand,
+      command: messages_impl.Commands.ZonesNoViolationTrouble,
+    },
+    {
+      func: messages.encodeZonesLongViolationTroubleCommand,
+      command: messages_impl.Commands.ZonesLongViolationTrouble,
+    },
+    {
+      func: messages.encodeZonesIsolateStateCommand,
+      command: messages_impl.Commands.ZonesIsolateState,
+    },
+    {
+      func: messages.encodeZonesMaskedCommand,
+      command: messages_impl.Commands.ZonesMasked,
+    },
+    {
+      func: messages.encodeZonesMaskedMemoryCommand,
+      command: messages_impl.Commands.ZonesMaskedMemory,
     },
   ];
 
   noDataCommandTests.forEach(function (test) {
-    it("encode " + test.name + " command", function () {
+    it(test.func.name + "()", function () {
       const frame = test.func();
       assert.equal(frame.length, 7);
       assert.equal(frame[2], test.command);
@@ -37,39 +73,33 @@ describe("Message encoding unit tests", function () {
 
   let outputsAndZonesChangeTests = [
     {
-      name: "outputs on",
       func: messages.encodeOutputsOnCommand,
       command: messages_impl.Commands.OutputsOn,
     },
     {
-      name: "outputs off",
       func: messages.encodeOutputsOffCommand,
       command: messages_impl.Commands.OutputsOff,
     },
     {
-      name: "outputs switch",
       func: messages.encodeOutputsSwitchCommand,
       command: messages_impl.Commands.OutputsSwitch,
     },
     {
-      name: "zones bypass",
       func: messages.encodeZonesBypassCommand,
       command: messages_impl.Commands.ZonesBypass,
     },
     {
-      name: "zones unbypass",
       func: messages.encodeZonesUnbypassCommand,
       command: messages_impl.Commands.ZonesUnbypass,
     },
     {
-      name: "zones isolate",
       func: messages.encodeZonesIsolateCommand,
       command: messages_impl.Commands.ZonesIsolate,
     },
   ];
 
   outputsAndZonesChangeTests.forEach(function (test) {
-    it("encode short " + test.name + " command", function () {
+    it(test.func.name + "(), short", function () {
       const outputs = new Array(128).fill(false, 0, 128);
       outputs[0] = true;
       outputs[2] = true;
@@ -105,7 +135,7 @@ describe("Message encoding unit tests", function () {
       );
     });
 
-    it("encode long " + test.name + " command", function () {
+    it(test.func.name + "(), long", function () {
       const outputs = new Array(256).fill(false, 0, 128);
       outputs[0] = true;
       outputs[2] = true;
@@ -183,24 +213,61 @@ describe("Message decoding unit tests", () => {
 
   let flagArrayAnswerTests = [
     {
-      name: "zones violation",
       message: messages.ZonesViolationAnswer,
       command: messages_impl.Commands.ZonesViolation,
     },
     {
-      name: "zones tamper",
       message: messages.ZonesTamperAnswer,
       command: messages_impl.Commands.ZonesTamper,
     },
     {
-      name: "outputs state",
       message: messages.OutputsStateAnswer,
       command: messages_impl.Commands.OutputsState,
+    },
+    {
+      message: messages.ZonesAlarmAnswer,
+      command: messages_impl.Commands.ZonesAlarm,
+    },
+    {
+      message: messages.ZonesTamperAlarmAnswer,
+      command: messages_impl.Commands.ZonesTamperAlarm,
+    },
+    {
+      message: messages.ZonesAlarmMemoryAnswer,
+      command: messages_impl.Commands.ZonesAlarmMemory,
+    },
+    {
+      message: messages.ZonesTamperAlarmMemoryAnswer,
+      command: messages_impl.Commands.ZonesTamperAlarmMemory,
+    },
+    {
+      message: messages.ZonesBypassStatusAnswer,
+      command: messages_impl.Commands.ZonesBypassStatus,
+    },
+    {
+      message: messages.ZonesNoViolationTroubleAnswer,
+      command: messages_impl.Commands.ZonesNoViolationTrouble,
+    },
+    {
+      message: messages.ZonesLongViolationTroubleAnswer,
+      command: messages_impl.Commands.ZonesLongViolationTrouble,
+    },
+    {
+      message: messages.ZonesIsolateStateAnswer,
+      command: messages_impl.Commands.ZonesIsolateState,
+    },
+    {
+      message: messages.ZonesMaskedAnswer,
+      command: messages_impl.Commands.ZonesMasked,
+    },
+    {
+      message: messages.ZonesMaskedMemoryAnswer,
+      command: messages_impl.Commands.ZonesMaskedMemory,
     },
   ];
 
   flagArrayAnswerTests.forEach(function (test) {
-    it("decode short " + test.name + " answer", function () {
+    it("decode " + test.message.name + ", short", function () {
       const encoder = new Encoder();
       encoder.addBytes(
         Buffer.from([test.command].concat(Array(16).fill(0xaa)))
@@ -216,7 +283,7 @@ describe("Message decoding unit tests", () => {
       }
     });
 
-    it("decode long " + test.name + " answer", function () {
+    it("decode " + test.message.name + ", long", function () {
       const encoder = new Encoder();
       encoder.addBytes(
         Buffer.from([test.command].concat(Array(32).fill(0xaa)))
@@ -234,9 +301,43 @@ describe("Message decoding unit tests", () => {
   });
 
   let newDataAnswerTests = [
-    { name: "zones violation", command: messages_impl.Commands.ZonesViolation },
-    { name: "zones tamper", command: messages_impl.Commands.ZonesTamper },
-    { name: "outputs state", command: messages_impl.Commands.OutputsState },
+    { name: "ZonesViolation", command: messages_impl.Commands.ZonesViolation },
+    { name: "ZonesTamper", command: messages_impl.Commands.ZonesTamper },
+    { name: "OutputsState", command: messages_impl.Commands.OutputsState },
+    { name: "ZonesAlarm", command: messages_impl.Commands.ZonesAlarm },
+    {
+      name: "ZonesTamperAlarm",
+      command: messages_impl.Commands.ZonesTamperAlarm,
+    },
+    {
+      name: "ZonesAlarmMemory",
+      command: messages_impl.Commands.ZonesAlarmMemory,
+    },
+    {
+      name: "ZonesTamperAlarmMemory",
+      command: messages_impl.Commands.ZonesTamperAlarmMemory,
+    },
+    {
+      name: "ZonesBypassStatus",
+      command: messages_impl.Commands.ZonesBypassStatus,
+    },
+    {
+      name: "ZonesNoViolationTrouble",
+      command: messages_impl.Commands.ZonesNoViolationTrouble,
+    },
+    {
+      name: "ZonesLongViolationTrouble",
+      command: messages_impl.Commands.ZonesLongViolationTrouble,
+    },
+    {
+      name: "ZonesIsolateState",
+      command: messages_impl.Commands.ZonesIsolateState,
+    },
+    { name: "ZonesMasked", command: messages_impl.Commands.ZonesMasked },
+    {
+      name: "ZonesMaskedMemory",
+      command: messages_impl.Commands.ZonesMaskedMemory,
+    },
   ];
 
   newDataAnswerTests.forEach(function (test) {
@@ -244,6 +345,8 @@ describe("Message decoding unit tests", () => {
       const encoder = new Encoder();
       const frame = Buffer.from([
         messages_impl.Commands.NewData,
+        0x00,
+        0x00,
         0x00,
         0x00,
         0x00,
@@ -266,6 +369,46 @@ describe("Message decoding unit tests", () => {
       assert.strictEqual(
         message.outputsStateChanged(),
         test.command == messages_impl.Commands.OutputsState
+      );
+      assert.strictEqual(
+        message.zonesAlarmChanged(),
+        test.command == messages_impl.Commands.ZonesAlarm
+      );
+      assert.strictEqual(
+        message.zonesTamperAlarmChanged(),
+        test.command == messages_impl.Commands.ZonesTamperAlarm
+      );
+      assert.strictEqual(
+        message.zonesAlarmMemoryChanged(),
+        test.command == messages_impl.Commands.ZonesAlarmMemory
+      );
+      assert.strictEqual(
+        message.zonesTamperAlarmMemoryChanged(),
+        test.command == messages_impl.Commands.ZonesTamperAlarmMemory
+      );
+      assert.strictEqual(
+        message.zonesBypassStatusChanged(),
+        test.command == messages_impl.Commands.ZonesBypassStatus
+      );
+      assert.strictEqual(
+        message.zonesNoViolationTroubleChanged(),
+        test.command == messages_impl.Commands.ZonesNoViolationTrouble
+      );
+      assert.strictEqual(
+        message.zonesLongViolationTroubleChanged(),
+        test.command == messages_impl.Commands.ZonesLongViolationTrouble
+      );
+      assert.strictEqual(
+        message.zonesIsolateStateChanged(),
+        test.command == messages_impl.Commands.ZonesIsolateState
+      );
+      assert.strictEqual(
+        message.zonesMaskedChanged(),
+        test.command == messages_impl.Commands.ZonesMasked
+      );
+      assert.strictEqual(
+        message.zonesMaskedMemoryChanged(),
+        test.command == messages_impl.Commands.ZonesMaskedMemory
       );
     });
   });
