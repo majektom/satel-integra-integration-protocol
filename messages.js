@@ -51,6 +51,90 @@ function encodeZonesLongViolationTroubleCommand() {
   );
 }
 
+function encodeArmedPartitionsSuppressedCommand() {
+  return message_impl.encodeNoDataCommand(
+    message_impl.Commands.ArmedPartitionsSuppressed
+  );
+}
+
+function encodeArmedPartitionsReallyCommand() {
+  return message_impl.encodeNoDataCommand(
+    message_impl.Commands.ArmedPartitionsReally
+  );
+}
+
+function encodePartitionsArmedInMode2Command() {
+  return message_impl.encodeNoDataCommand(
+    message_impl.Commands.PartitionsArmedInMode2
+  );
+}
+
+function encodePartitionsArmedInMode3Command() {
+  return message_impl.encodeNoDataCommand(
+    message_impl.Commands.PartitionsArmedInMode3
+  );
+}
+
+function encodePartitionsWith1stCodeEnteredCommand() {
+  return message_impl.encodeNoDataCommand(
+    message_impl.Commands.PartitionsWith1stCodeEntered
+  );
+}
+
+function encodePartitionsEntryTimeCommand() {
+  return message_impl.encodeNoDataCommand(
+    message_impl.Commands.PartitionsEntryTime
+  );
+}
+
+function encodePartitionsExitTimeMoreThen10sCommand() {
+  return message_impl.encodeNoDataCommand(
+    message_impl.Commands.PartitionsExitTimeMoreThen10s
+  );
+}
+
+function encodePartitionsExitTimeLessThen10sCommand() {
+  return message_impl.encodeNoDataCommand(
+    message_impl.Commands.PartitionsExitTimeLessThen10s
+  );
+}
+
+function encodePartitionsTemporaryBlockedCommand() {
+  return message_impl.encodeNoDataCommand(
+    message_impl.Commands.PartitionsTemporaryBlocked
+  );
+}
+
+function encodePartitionsBlockedForGuardRoundCommand() {
+  return message_impl.encodeNoDataCommand(
+    message_impl.Commands.PartitionsBlockedForGuardRound
+  );
+}
+
+function encodePartitionsAlarmCommand() {
+  return message_impl.encodeNoDataCommand(
+    message_impl.Commands.PartitionsAlarm
+  );
+}
+
+function encodePartitionsFireAlarmCommand() {
+  return message_impl.encodeNoDataCommand(
+    message_impl.Commands.PartitionsFireAlarm
+  );
+}
+
+function encodePartitionsAlarmMemoryCommand() {
+  return message_impl.encodeNoDataCommand(
+    message_impl.Commands.PartitionsAlarmMemory
+  );
+}
+
+function encodePartitionsFireAlarmMemoryCommand() {
+  return message_impl.encodeNoDataCommand(
+    message_impl.Commands.PartitionsFireAlarmMemory
+  );
+}
+
 function encodeZonesIsolateStateCommand() {
   return message_impl.encodeNoDataCommand(
     message_impl.Commands.ZonesIsolateState
@@ -73,6 +157,86 @@ function encodeOutputsStateCommand() {
 
 function encodeNewDataCommand() {
   return message_impl.encodeNoDataCommand(message_impl.Commands.NewData);
+}
+
+function encodeArmInMode0Command(prefixAndUserCode, partitions) {
+  return message_impl.encodeFlagsArrayWithCodeCommand(
+    message_impl.Commands.ArmInMode0,
+    prefixAndUserCode,
+    partitions
+  );
+}
+
+function encodeArmInMode1Command(prefixAndUserCode, partitions) {
+  return message_impl.encodeFlagsArrayWithCodeCommand(
+    message_impl.Commands.ArmInMode1,
+    prefixAndUserCode,
+    partitions
+  );
+}
+
+function encodeArmInMode2Command(prefixAndUserCode, partitions) {
+  return message_impl.encodeFlagsArrayWithCodeCommand(
+    message_impl.Commands.ArmInMode2,
+    prefixAndUserCode,
+    partitions
+  );
+}
+
+function encodeArmInMode3Command(prefixAndUserCode, partitions) {
+  return message_impl.encodeFlagsArrayWithCodeCommand(
+    message_impl.Commands.ArmInMode3,
+    prefixAndUserCode,
+    partitions
+  );
+}
+
+function encodeDisarmCommand(prefixAndUserCode, partitions) {
+  return message_impl.encodeFlagsArrayWithCodeCommand(
+    message_impl.Commands.Disarm,
+    prefixAndUserCode,
+    partitions
+  );
+}
+
+function encodeClearAlarmCommand(prefixAndUserCode, partitions) {
+  return message_impl.encodeFlagsArrayWithCodeCommand(
+    message_impl.Commands.ClearAlarm,
+    prefixAndUserCode,
+    partitions
+  );
+}
+
+function encodeForceArmInMode0Command(prefixAndUserCode, partitions) {
+  return message_impl.encodeFlagsArrayWithCodeCommand(
+    message_impl.Commands.ForceArmInMode0,
+    prefixAndUserCode,
+    partitions
+  );
+}
+
+function encodeForceArmInMode1Command(prefixAndUserCode, partitions) {
+  return message_impl.encodeFlagsArrayWithCodeCommand(
+    message_impl.Commands.ForceArmInMode1,
+    prefixAndUserCode,
+    partitions
+  );
+}
+
+function encodeForceArmInMode2Command(prefixAndUserCode, partitions) {
+  return message_impl.encodeFlagsArrayWithCodeCommand(
+    message_impl.Commands.ForceArmInMode2,
+    prefixAndUserCode,
+    partitions
+  );
+}
+
+function encodeForceArmInMode3Command(prefixAndUserCode, partitions) {
+  return message_impl.encodeFlagsArrayWithCodeCommand(
+    message_impl.Commands.ForceArmInMode3,
+    prefixAndUserCode,
+    partitions
+  );
 }
 
 function encodeOutputsOnCommand(prefixAndUserCode, outputs) {
@@ -213,6 +377,90 @@ class ZonesLongViolationTroubleAnswer extends FlagArrayAnswer {
   }
 }
 
+class ArmedPartitionsSuppressedAnswer extends FlagArrayAnswer {
+  constructor() {
+    super([4]);
+  }
+}
+
+class ArmedPartitionsReallyAnswer extends FlagArrayAnswer {
+  constructor() {
+    super([4]);
+  }
+}
+
+class PartitionsArmedInMode2Answer extends FlagArrayAnswer {
+  constructor() {
+    super([4]);
+  }
+}
+
+class PartitionsArmedInMode3Answer extends FlagArrayAnswer {
+  constructor() {
+    super([4]);
+  }
+}
+
+class PartitionsWith1stCodeEnteredAnswer extends FlagArrayAnswer {
+  constructor() {
+    super([4]);
+  }
+}
+
+class PartitionsEntryTimeAnswer extends FlagArrayAnswer {
+  constructor() {
+    super([4]);
+  }
+}
+
+class PartitionsExitTimeMoreThen10sAnswer extends FlagArrayAnswer {
+  constructor() {
+    super([4]);
+  }
+}
+
+class PartitionsExitTimeLessThen10sAnswer extends FlagArrayAnswer {
+  constructor() {
+    super([4]);
+  }
+}
+
+class PartitionsTemporaryBlockedAnswer extends FlagArrayAnswer {
+  constructor() {
+    super([4]);
+  }
+}
+
+class PartitionsBlockedForGuardRoundAnswer extends FlagArrayAnswer {
+  constructor() {
+    super([4]);
+  }
+}
+
+class PartitionsAlarmAnswer extends FlagArrayAnswer {
+  constructor() {
+    super([4]);
+  }
+}
+
+class PartitionsFireAlarmAnswer extends FlagArrayAnswer {
+  constructor() {
+    super([4]);
+  }
+}
+
+class PartitionsAlarmMemoryAnswer extends FlagArrayAnswer {
+  constructor() {
+    super([4]);
+  }
+}
+
+class PartitionsFireAlarmMemoryAnswer extends FlagArrayAnswer {
+  constructor() {
+    super([4]);
+  }
+}
+
 class ZonesIsolateStateAnswer extends FlagArrayAnswer {
   constructor() {
     super([16, 32]);
@@ -274,6 +522,62 @@ class NewDataAnswer extends FlagArrayAnswer {
 
   zonesLongViolationTroubleChanged() {
     return this._flags[message_impl.Commands.ZonesLongViolationTrouble];
+  }
+
+  armedPartitionsSuppressedChanged() {
+    return this._flags[message_impl.Commands.ArmedPartitionsSuppressed];
+  }
+
+  armedPartitionsReallyChanged() {
+    return this._flags[message_impl.Commands.ArmedPartitionsReally];
+  }
+
+  partitionsArmedInMode2Changed() {
+    return this._flags[message_impl.Commands.PartitionsArmedInMode2];
+  }
+
+  partitionsArmedInMode3Changed() {
+    return this._flags[message_impl.Commands.PartitionsArmedInMode3];
+  }
+
+  partitionsWith1stCodeEnteredChanged() {
+    return this._flags[message_impl.Commands.PartitionsWith1stCodeEntered];
+  }
+
+  partitionsEntryTimeChanged() {
+    return this._flags[message_impl.Commands.PartitionsEntryTime];
+  }
+
+  partitionsExitTimeMoreThen10sChanged() {
+    return this._flags[message_impl.Commands.PartitionsExitTimeMoreThen10s];
+  }
+
+  partitionsExitTimeLessThen10sChanged() {
+    return this._flags[message_impl.Commands.PartitionsExitTimeLessThen10s];
+  }
+
+  partitionsTemporaryBlockedChanged() {
+    return this._flags[message_impl.Commands.PartitionsTemporaryBlocked];
+  }
+
+  partitionsBlockedForGuardRoundChanged() {
+    return this._flags[message_impl.Commands.PartitionsBlockedForGuardRound];
+  }
+
+  partitionsAlarmChanged() {
+    return this._flags[message_impl.Commands.PartitionsAlarm];
+  }
+
+  partitionsFireAlarmChanged() {
+    return this._flags[message_impl.Commands.PartitionsFireAlarm];
+  }
+
+  partitionsAlarmMemoryChanged() {
+    return this._flags[message_impl.Commands.PartitionsAlarmMemory];
+  }
+
+  partitionsFireAlarmMemoryChanged() {
+    return this._flags[message_impl.Commands.PartitionsFireAlarmMemory];
   }
 
   zonesIsolateStateChanged() {
@@ -432,6 +736,48 @@ function decodeMessage(frame) {
     case message_impl.Commands.ZonesLongViolationTrouble:
       message = new ZonesLongViolationTroubleAnswer();
       break;
+    case message_impl.Commands.ArmedPartitionsSuppressed:
+      message = new ArmedPartitionsSuppressedAnswer();
+      break;
+    case message_impl.Commands.ArmedPartitionsReally:
+      message = new ArmedPartitionsReallyAnswer();
+      break;
+    case message_impl.Commands.PartitionsArmedInMode2:
+      message = new PartitionsArmedInMode2Answer();
+      break;
+    case message_impl.Commands.PartitionsArmedInMode3:
+      message = new PartitionsArmedInMode3Answer();
+      break;
+    case message_impl.Commands.PartitionsWith1stCodeEntered:
+      message = new PartitionsWith1stCodeEnteredAnswer();
+      break;
+    case message_impl.Commands.PartitionsEntryTime:
+      message = new PartitionsEntryTimeAnswer();
+      break;
+    case message_impl.Commands.PartitionsExitTimeMoreThen10s:
+      message = new PartitionsExitTimeMoreThen10sAnswer();
+      break;
+    case message_impl.Commands.PartitionsExitTimeLessThen10s:
+      message = new PartitionsExitTimeLessThen10sAnswer();
+      break;
+    case message_impl.Commands.PartitionsTemporaryBlocked:
+      message = new PartitionsTemporaryBlockedAnswer();
+      break;
+    case message_impl.Commands.PartitionsBlockedForGuardRound:
+      message = new PartitionsBlockedForGuardRoundAnswer();
+      break;
+    case message_impl.Commands.PartitionsAlarm:
+      message = new PartitionsAlarmAnswer();
+      break;
+    case message_impl.Commands.PartitionsFireAlarm:
+      message = new PartitionsFireAlarmAnswer();
+      break;
+    case message_impl.Commands.PartitionsAlarmMemory:
+      message = new PartitionsAlarmMemoryAnswer();
+      break;
+    case message_impl.Commands.PartitionsFireAlarmMemory:
+      message = new PartitionsFireAlarmMemoryAnswer();
+      break;
     case message_impl.Commands.ZonesIsolateState:
       message = new ZonesIsolateStateAnswer();
       break;
@@ -454,11 +800,35 @@ function decodeMessage(frame) {
 
 module.exports = {
   decodeMessage,
+  encodeArmedPartitionsReallyCommand,
+  encodeArmedPartitionsSuppressedCommand,
+  encodeArmInMode0Command,
+  encodeArmInMode1Command,
+  encodeArmInMode2Command,
+  encodeArmInMode3Command,
+  encodeClearAlarmCommand,
+  encodeDisarmCommand,
+  encodeForceArmInMode0Command,
+  encodeForceArmInMode1Command,
+  encodeForceArmInMode2Command,
+  encodeForceArmInMode3Command,
   encodeNewDataCommand,
   encodeOutputsOffCommand,
   encodeOutputsOnCommand,
   encodeOutputsStateCommand,
   encodeOutputsSwitchCommand,
+  encodePartitionsAlarmCommand,
+  encodePartitionsAlarmMemoryCommand,
+  encodePartitionsArmedInMode2Command,
+  encodePartitionsArmedInMode3Command,
+  encodePartitionsBlockedForGuardRoundCommand,
+  encodePartitionsEntryTimeCommand,
+  encodePartitionsExitTimeLessThen10sCommand,
+  encodePartitionsExitTimeMoreThen10sCommand,
+  encodePartitionsFireAlarmCommand,
+  encodePartitionsFireAlarmMemoryCommand,
+  encodePartitionsTemporaryBlockedCommand,
+  encodePartitionsWith1stCodeEnteredCommand,
   encodeZonesAlarmCommand,
   encodeZonesAlarmMemoryCommand,
   encodeZonesBypassCommand,
@@ -474,9 +844,23 @@ module.exports = {
   encodeZonesTamperCommand,
   encodeZonesUnbypassCommand,
   encodeZonesViolationCommand,
+  ArmedPartitionsReallyAnswer,
+  ArmedPartitionsSuppressedAnswer,
   CommandResultAnswer,
   NewDataAnswer,
   OutputsStateAnswer,
+  PartitionsAlarmAnswer,
+  PartitionsAlarmMemoryAnswer,
+  PartitionsArmedInMode2Answer,
+  PartitionsArmedInMode3Answer,
+  PartitionsBlockedForGuardRoundAnswer,
+  PartitionsEntryTimeAnswer,
+  PartitionsExitTimeLessThen10sAnswer,
+  PartitionsExitTimeMoreThen10sAnswer,
+  PartitionsFireAlarmAnswer,
+  PartitionsFireAlarmMemoryAnswer,
+  PartitionsTemporaryBlockedAnswer,
+  PartitionsWith1stCodeEnteredAnswer,
   ZonesAlarmAnswer,
   ZonesAlarmMemoryAnswer,
   ZonesBypassStatusAnswer,

@@ -50,6 +50,62 @@ describe("Message encoding unit tests", function () {
       command: messages_impl.Commands.ZonesLongViolationTrouble,
     },
     {
+      func: messages.encodeArmedPartitionsSuppressedCommand,
+      command: messages_impl.Commands.ArmedPartitionsSuppressed,
+    },
+    {
+      func: messages.encodeArmedPartitionsReallyCommand,
+      command: messages_impl.Commands.ArmedPartitionsReally,
+    },
+    {
+      func: messages.encodePartitionsArmedInMode2Command,
+      command: messages_impl.Commands.PartitionsArmedInMode2,
+    },
+    {
+      func: messages.encodePartitionsArmedInMode3Command,
+      command: messages_impl.Commands.PartitionsArmedInMode3,
+    },
+    {
+      func: messages.encodePartitionsWith1stCodeEnteredCommand,
+      command: messages_impl.Commands.PartitionsWith1stCodeEntered,
+    },
+    {
+      func: messages.encodePartitionsEntryTimeCommand,
+      command: messages_impl.Commands.PartitionsEntryTime,
+    },
+    {
+      func: messages.encodePartitionsExitTimeMoreThen10sCommand,
+      command: messages_impl.Commands.PartitionsExitTimeMoreThen10s,
+    },
+    {
+      func: messages.encodePartitionsExitTimeLessThen10sCommand,
+      command: messages_impl.Commands.PartitionsExitTimeLessThen10s,
+    },
+    {
+      func: messages.encodePartitionsTemporaryBlockedCommand,
+      command: messages_impl.Commands.PartitionsTemporaryBlocked,
+    },
+    {
+      func: messages.encodePartitionsBlockedForGuardRoundCommand,
+      command: messages_impl.Commands.PartitionsBlockedForGuardRound,
+    },
+    {
+      func: messages.encodePartitionsAlarmCommand,
+      command: messages_impl.Commands.PartitionsAlarm,
+    },
+    {
+      func: messages.encodePartitionsFireAlarmCommand,
+      command: messages_impl.Commands.PartitionsFireAlarm,
+    },
+    {
+      func: messages.encodePartitionsAlarmMemoryCommand,
+      command: messages_impl.Commands.PartitionsAlarmMemory,
+    },
+    {
+      func: messages.encodePartitionsFireAlarmMemoryCommand,
+      command: messages_impl.Commands.PartitionsFireAlarmMemory,
+    },
+    {
       func: messages.encodeZonesIsolateStateCommand,
       command: messages_impl.Commands.ZonesIsolateState,
     },
@@ -66,8 +122,8 @@ describe("Message encoding unit tests", function () {
   noDataCommandTests.forEach(function (test) {
     it(test.func.name + "()", function () {
       const frame = test.func();
-      assert.equal(frame.length, 7);
-      assert.equal(frame[2], test.command);
+      assert.strictEqual(frame.length, 7);
+      assert.strictEqual(frame[2], test.command);
     });
   });
 
@@ -107,12 +163,12 @@ describe("Message encoding unit tests", function () {
       outputs[119] = true;
       const frame = test.func("0123456789fffFFF", outputs);
       assert(frame.length >= 31);
-      assert.equal(frame[2], test.command);
-      assert.deepEqual(
+      assert.strictEqual(frame[2], test.command);
+      assert.deepStrictEqual(
         frame.subarray(3, 11),
         Buffer.from([0x01, 0x23, 0x45, 0x67, 0x89, 0xff, 0xff, 0xff])
       );
-      assert.deepEqual(
+      assert.deepStrictEqual(
         frame.subarray(11, 27),
         Buffer.from([
           0x05,
@@ -142,13 +198,13 @@ describe("Message encoding unit tests", function () {
       outputs[61] = true;
       outputs[254] = true;
       const frame = test.func("0123456789fffFFF", outputs);
-      assert.equal(frame.length, 47);
-      assert.equal(frame[2], test.command);
-      assert.deepEqual(
+      assert.strictEqual(frame.length, 47);
+      assert.strictEqual(frame[2], test.command);
+      assert.deepStrictEqual(
         frame.subarray(3, 11),
         Buffer.from([0x01, 0x23, 0x45, 0x67, 0x89, 0xff, 0xff, 0xff])
       );
-      assert.deepEqual(
+      assert.deepStrictEqual(
         frame.subarray(11, 43),
         Buffer.from([
           0x05,
@@ -184,6 +240,69 @@ describe("Message encoding unit tests", function () {
           0x00,
           0x40,
         ])
+      );
+    });
+  });
+
+  let partitionsChangeTests = [
+    {
+      func: messages.encodeArmInMode0Command,
+      command: messages_impl.Commands.ArmInMode0,
+    },
+    {
+      func: messages.encodeArmInMode1Command,
+      command: messages_impl.Commands.ArmInMode1,
+    },
+    {
+      func: messages.encodeArmInMode2Command,
+      command: messages_impl.Commands.ArmInMode2,
+    },
+    {
+      func: messages.encodeArmInMode3Command,
+      command: messages_impl.Commands.ArmInMode3,
+    },
+    {
+      func: messages.encodeDisarmCommand,
+      command: messages_impl.Commands.Disarm,
+    },
+    {
+      func: messages.encodeClearAlarmCommand,
+      command: messages_impl.Commands.ClearAlarm,
+    },
+    {
+      func: messages.encodeForceArmInMode0Command,
+      command: messages_impl.Commands.ForceArmInMode0,
+    },
+    {
+      func: messages.encodeForceArmInMode1Command,
+      command: messages_impl.Commands.ForceArmInMode1,
+    },
+    {
+      func: messages.encodeForceArmInMode2Command,
+      command: messages_impl.Commands.ForceArmInMode2,
+    },
+    {
+      func: messages.encodeForceArmInMode3Command,
+      command: messages_impl.Commands.ForceArmInMode3,
+    },
+  ];
+
+  partitionsChangeTests.forEach(function (test) {
+    it(test.func.name + "()", function () {
+      const partitions = new Array(128).fill(false, 0, 32);
+      partitions[0] = true;
+      partitions[1] = true;
+      partitions[28] = true;
+      const frame = test.func("0123456789fffFFF", partitions);
+      assert(frame.length >= 31);
+      assert.strictEqual(frame[2], test.command);
+      assert.deepStrictEqual(
+        frame.subarray(3, 11),
+        Buffer.from([0x01, 0x23, 0x45, 0x67, 0x89, 0xff, 0xff, 0xff])
+      );
+      assert.deepStrictEqual(
+        frame.subarray(11, 15),
+        Buffer.from([0x03, 0x00, 0x00, 0x10])
       );
     });
   });
@@ -300,6 +419,81 @@ describe("Message decoding unit tests", () => {
     });
   });
 
+  let partitionsFlagArrayAnswerTests = [
+    {
+      message: messages.ArmedPartitionsSuppressedAnswer,
+      command: messages_impl.Commands.ArmedPartitionsSuppressed,
+    },
+    {
+      message: messages.ArmedPartitionsReallyAnswer,
+      command: messages_impl.Commands.ArmedPartitionsReally,
+    },
+    {
+      message: messages.PartitionsArmedInMode2Answer,
+      command: messages_impl.Commands.PartitionsArmedInMode2,
+    },
+    {
+      message: messages.PartitionsArmedInMode3Answer,
+      command: messages_impl.Commands.PartitionsArmedInMode3,
+    },
+    {
+      message: messages.PartitionsWith1stCodeEnteredAnswer,
+      command: messages_impl.Commands.PartitionsWith1stCodeEntered,
+    },
+    {
+      message: messages.PartitionsEntryTimeAnswer,
+      command: messages_impl.Commands.PartitionsEntryTime,
+    },
+    {
+      message: messages.PartitionsExitTimeMoreThen10sAnswer,
+      command: messages_impl.Commands.PartitionsExitTimeMoreThen10s,
+    },
+    {
+      message: messages.PartitionsExitTimeLessThen10sAnswer,
+      command: messages_impl.Commands.PartitionsExitTimeLessThen10s,
+    },
+    {
+      message: messages.PartitionsTemporaryBlockedAnswer,
+      command: messages_impl.Commands.PartitionsTemporaryBlocked,
+    },
+    {
+      message: messages.PartitionsBlockedForGuardRoundAnswer,
+      command: messages_impl.Commands.PartitionsBlockedForGuardRound,
+    },
+    {
+      message: messages.PartitionsAlarmAnswer,
+      command: messages_impl.Commands.PartitionsAlarm,
+    },
+    {
+      message: messages.PartitionsFireAlarmAnswer,
+      command: messages_impl.Commands.PartitionsFireAlarm,
+    },
+    {
+      message: messages.PartitionsAlarmMemoryAnswer,
+      command: messages_impl.Commands.PartitionsAlarmMemory,
+    },
+    {
+      message: messages.PartitionsFireAlarmMemoryAnswer,
+      command: messages_impl.Commands.PartitionsFireAlarmMemory,
+    },
+  ];
+
+  partitionsFlagArrayAnswerTests.forEach(function (test) {
+    it("decode " + test.message.name, function () {
+      const encoder = new Encoder();
+      encoder.addBytes(Buffer.from([test.command].concat(Array(4).fill(0xaa))));
+      const message = messages.decodeMessage(encoder.frame());
+      assert.ok(message instanceof test.message);
+      for (let i = 0; i < 16; ++i) {
+        assert.strictEqual(
+          message.flags[i],
+          i % 2 != 0,
+          "for flag with index " + i
+        );
+      }
+    });
+  });
+
   let newDataAnswerTests = [
     { name: "ZonesViolation", command: messages_impl.Commands.ZonesViolation },
     { name: "ZonesTamper", command: messages_impl.Commands.ZonesTamper },
@@ -328,6 +522,62 @@ describe("Message decoding unit tests", () => {
     {
       name: "ZonesLongViolationTrouble",
       command: messages_impl.Commands.ZonesLongViolationTrouble,
+    },
+    {
+      name: "ArmedPartitionsSuppressed",
+      command: messages_impl.Commands.ArmedPartitionsSuppressed,
+    },
+    {
+      name: "ArmedPartitionsReally",
+      command: messages_impl.Commands.ArmedPartitionsReally,
+    },
+    {
+      name: "PartitionsArmedInMode2",
+      command: messages_impl.Commands.PartitionsArmedInMode2,
+    },
+    {
+      name: "PartitionsArmedInMode3",
+      command: messages_impl.Commands.PartitionsArmedInMode3,
+    },
+    {
+      name: "PartitionsWith1stCodeEntered",
+      command: messages_impl.Commands.PartitionsWith1stCodeEntered,
+    },
+    {
+      name: "PartitionsEntryTime",
+      command: messages_impl.Commands.PartitionsEntryTime,
+    },
+    {
+      name: "PartitionsExitTimeMoreThen10s",
+      command: messages_impl.Commands.PartitionsExitTimeMoreThen10s,
+    },
+    {
+      name: "PartitionsExitTimeLessThen10s",
+      command: messages_impl.Commands.PartitionsExitTimeLessThen10s,
+    },
+    {
+      name: "PartitionsTemporaryBlocked",
+      command: messages_impl.Commands.PartitionsTemporaryBlocked,
+    },
+    {
+      name: "PartitionsBlockedForGuardRound",
+      command: messages_impl.Commands.PartitionsBlockedForGuardRound,
+    },
+    {
+      name: "PartitionsAlarm",
+      command: messages_impl.Commands.PartitionsAlarm,
+    },
+    {
+      name: "PartitionsFireAlarm",
+      command: messages_impl.Commands.PartitionsFireAlarm,
+    },
+    {
+      name: "PartitionsAlarmMemory",
+      command: messages_impl.Commands.PartitionsAlarmMemory,
+    },
+    {
+      name: "PartitionsFireAlarmMemory",
+      command: messages_impl.Commands.PartitionsFireAlarmMemory,
     },
     {
       name: "ZonesIsolateState",
@@ -397,6 +647,62 @@ describe("Message decoding unit tests", () => {
       assert.strictEqual(
         message.zonesLongViolationTroubleChanged(),
         test.command == messages_impl.Commands.ZonesLongViolationTrouble
+      );
+      assert.strictEqual(
+        message.armedPartitionsSuppressedChanged(),
+        test.command == messages_impl.Commands.ArmedPartitionsSuppressed
+      );
+      assert.strictEqual(
+        message.armedPartitionsReallyChanged(),
+        test.command == messages_impl.Commands.ArmedPartitionsReally
+      );
+      assert.strictEqual(
+        message.partitionsArmedInMode2Changed(),
+        test.command == messages_impl.Commands.PartitionsArmedInMode2
+      );
+      assert.strictEqual(
+        message.partitionsArmedInMode3Changed(),
+        test.command == messages_impl.Commands.PartitionsArmedInMode3
+      );
+      assert.strictEqual(
+        message.partitionsWith1stCodeEnteredChanged(),
+        test.command == messages_impl.Commands.PartitionsWith1stCodeEntered
+      );
+      assert.strictEqual(
+        message.partitionsEntryTimeChanged(),
+        test.command == messages_impl.Commands.PartitionsEntryTime
+      );
+      assert.strictEqual(
+        message.partitionsExitTimeMoreThen10sChanged(),
+        test.command == messages_impl.Commands.PartitionsExitTimeMoreThen10s
+      );
+      assert.strictEqual(
+        message.partitionsExitTimeLessThen10sChanged(),
+        test.command == messages_impl.Commands.PartitionsExitTimeLessThen10s
+      );
+      assert.strictEqual(
+        message.partitionsTemporaryBlockedChanged(),
+        test.command == messages_impl.Commands.PartitionsTemporaryBlocked
+      );
+      assert.strictEqual(
+        message.partitionsBlockedForGuardRoundChanged(),
+        test.command == messages_impl.Commands.PartitionsBlockedForGuardRound
+      );
+      assert.strictEqual(
+        message.partitionsAlarmChanged(),
+        test.command == messages_impl.Commands.PartitionsAlarm
+      );
+      assert.strictEqual(
+        message.partitionsFireAlarmChanged(),
+        test.command == messages_impl.Commands.PartitionsFireAlarm
+      );
+      assert.strictEqual(
+        message.partitionsAlarmMemoryChanged(),
+        test.command == messages_impl.Commands.PartitionsAlarmMemory
+      );
+      assert.strictEqual(
+        message.partitionsFireAlarmMemoryChanged(),
+        test.command == messages_impl.Commands.PartitionsFireAlarmMemory
       );
       assert.strictEqual(
         message.zonesIsolateStateChanged(),
