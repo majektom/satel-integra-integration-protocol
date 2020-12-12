@@ -163,7 +163,9 @@ function encodeArmInMode0Command(prefixAndUserCode, partitions) {
   return message_impl.encodeFlagsArrayWithCodeCommand(
     message_impl.Commands.ArmInMode0,
     prefixAndUserCode,
-    partitions
+    partitions,
+    "partitions",
+    [32]
   );
 }
 
@@ -171,7 +173,9 @@ function encodeArmInMode1Command(prefixAndUserCode, partitions) {
   return message_impl.encodeFlagsArrayWithCodeCommand(
     message_impl.Commands.ArmInMode1,
     prefixAndUserCode,
-    partitions
+    partitions,
+    "partitions",
+    [32]
   );
 }
 
@@ -179,7 +183,9 @@ function encodeArmInMode2Command(prefixAndUserCode, partitions) {
   return message_impl.encodeFlagsArrayWithCodeCommand(
     message_impl.Commands.ArmInMode2,
     prefixAndUserCode,
-    partitions
+    partitions,
+    "partitions",
+    [32]
   );
 }
 
@@ -187,7 +193,9 @@ function encodeArmInMode3Command(prefixAndUserCode, partitions) {
   return message_impl.encodeFlagsArrayWithCodeCommand(
     message_impl.Commands.ArmInMode3,
     prefixAndUserCode,
-    partitions
+    partitions,
+    "partitions",
+    [32]
   );
 }
 
@@ -195,7 +203,9 @@ function encodeDisarmCommand(prefixAndUserCode, partitions) {
   return message_impl.encodeFlagsArrayWithCodeCommand(
     message_impl.Commands.Disarm,
     prefixAndUserCode,
-    partitions
+    partitions,
+    "partitions",
+    [32]
   );
 }
 
@@ -203,7 +213,9 @@ function encodeClearAlarmCommand(prefixAndUserCode, partitions) {
   return message_impl.encodeFlagsArrayWithCodeCommand(
     message_impl.Commands.ClearAlarm,
     prefixAndUserCode,
-    partitions
+    partitions,
+    "partitions",
+    [32]
   );
 }
 
@@ -211,7 +223,9 @@ function encodeForceArmInMode0Command(prefixAndUserCode, partitions) {
   return message_impl.encodeFlagsArrayWithCodeCommand(
     message_impl.Commands.ForceArmInMode0,
     prefixAndUserCode,
-    partitions
+    partitions,
+    "partitions",
+    [32]
   );
 }
 
@@ -219,7 +233,9 @@ function encodeForceArmInMode1Command(prefixAndUserCode, partitions) {
   return message_impl.encodeFlagsArrayWithCodeCommand(
     message_impl.Commands.ForceArmInMode1,
     prefixAndUserCode,
-    partitions
+    partitions,
+    "partitions",
+    [32]
   );
 }
 
@@ -227,7 +243,9 @@ function encodeForceArmInMode2Command(prefixAndUserCode, partitions) {
   return message_impl.encodeFlagsArrayWithCodeCommand(
     message_impl.Commands.ForceArmInMode2,
     prefixAndUserCode,
-    partitions
+    partitions,
+    "partitions",
+    [32]
   );
 }
 
@@ -235,7 +253,9 @@ function encodeForceArmInMode3Command(prefixAndUserCode, partitions) {
   return message_impl.encodeFlagsArrayWithCodeCommand(
     message_impl.Commands.ForceArmInMode3,
     prefixAndUserCode,
-    partitions
+    partitions,
+    "partitions",
+    [32]
   );
 }
 
@@ -243,7 +263,9 @@ function encodeOutputsOnCommand(prefixAndUserCode, outputs) {
   return message_impl.encodeFlagsArrayWithCodeCommand(
     message_impl.Commands.OutputsOn,
     prefixAndUserCode,
-    outputs
+    outputs,
+    "outputs",
+    [128, 256]
   );
 }
 
@@ -251,7 +273,9 @@ function encodeOutputsOffCommand(prefixAndUserCode, outputs) {
   return message_impl.encodeFlagsArrayWithCodeCommand(
     message_impl.Commands.OutputsOff,
     prefixAndUserCode,
-    outputs
+    outputs,
+    "outputs",
+    [128, 256]
   );
 }
 
@@ -259,7 +283,9 @@ function encodeOutputsSwitchCommand(prefixAndUserCode, outputs) {
   return message_impl.encodeFlagsArrayWithCodeCommand(
     message_impl.Commands.OutputsSwitch,
     prefixAndUserCode,
-    outputs
+    outputs,
+    "outputs",
+    [128, 256]
   );
 }
 
@@ -267,7 +293,9 @@ function encodeZonesBypassCommand(prefixAndUserCode, zones) {
   return message_impl.encodeFlagsArrayWithCodeCommand(
     message_impl.Commands.ZonesBypass,
     prefixAndUserCode,
-    zones
+    zones,
+    "zones",
+    [128, 256]
   );
 }
 
@@ -275,7 +303,9 @@ function encodeZonesUnbypassCommand(prefixAndUserCode, zones) {
   return message_impl.encodeFlagsArrayWithCodeCommand(
     message_impl.Commands.ZonesUnbypass,
     prefixAndUserCode,
-    zones
+    zones,
+    "zones",
+    [128, 256]
   );
 }
 
@@ -283,7 +313,9 @@ function encodeZonesIsolateCommand(prefixAndUserCode, zones) {
   return message_impl.encodeFlagsArrayWithCodeCommand(
     message_impl.Commands.ZonesIsolate,
     prefixAndUserCode,
-    zones
+    zones,
+    "zones",
+    [128, 256]
   );
 }
 

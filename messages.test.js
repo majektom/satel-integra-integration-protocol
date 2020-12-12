@@ -289,12 +289,12 @@ describe("Message encoding unit tests", function () {
 
   partitionsChangeTests.forEach(function (test) {
     it(test.func.name + "()", function () {
-      const partitions = new Array(128).fill(false, 0, 32);
+      const partitions = new Array(32).fill(false, 0, 32);
       partitions[0] = true;
       partitions[1] = true;
       partitions[28] = true;
       const frame = test.func("0123456789fffFFF", partitions);
-      assert(frame.length >= 31);
+      assert(frame.length >= 19);
       assert.strictEqual(frame[2], test.command);
       assert.deepStrictEqual(
         frame.subarray(3, 11),

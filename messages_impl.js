@@ -78,18 +78,22 @@ function prefixAndUserCodeStringToBuffer(prefixAndUserCode) {
   return buffer;
 }
 
-function flagsArrayToBuffer(flags) {
+function flagsArrayToBuffer(flags, name, validLengths) {
   if (!Array.isArray(flags)) {
-    throw "'flags' must be an array";
+    throw "'" + name + "' must be an array";
   }
-  const flagsLength = 16 * 8;
-  const flagsLongLength = 32 * 8;
-  if (flags.length != flagsLength && flags.length != flagsLongLength) {
+  if (
+    validLengths.every(function (validLength) {
+      return validLength != flags.length;
+    })
+  ) {
     throw (
-      "'flags' array must have " +
-      flagsLength +
-      " or " +
-      flagsLongLength +
+      "'" +
+      name +
+      "' array must have " +
+      validLengths.reduce(function (prev, curr) {
+        return "" + prev + " or " + curr;
+      }) +
       " elements"
     );
   }
@@ -102,11 +106,17 @@ function flagsArrayToBuffer(flags) {
   return buffer;
 }
 
-function encodeFlagsArrayWithCodeCommand(command, prefixAndUserCode, flags) {
+function encodeFlagsArrayWithCodeCommand(
+  command,
+  prefixAndUserCode,
+  flags,
+  name,
+  validLengths
+) {
   const encoder = new Encoder();
   encoder.addByte(command);
   encoder.addBytes(prefixAndUserCodeStringToBuffer(prefixAndUserCode));
-  encoder.addBytes(flagsArrayToBuffer(flags));
+  encoder.addBytes(flagsArrayToBuffer(flags, name, validLengths));
   return encoder.frame();
 }
 
