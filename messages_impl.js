@@ -52,7 +52,11 @@ const Commands = Object.freeze({
 
 function encodeNoDataCommand(command) {
   const encoder = new Encoder();
-  encoder.addByte(command);
+  if (Buffer.isBuffer(command)) {
+    encoder.addBytes(command);
+  } else {
+    encoder.addByte(command);
+  }
   return encoder.frame();
 }
 

@@ -7,17 +7,41 @@ function encodeZonesViolationCommand() {
   return message_impl.encodeNoDataCommand(message_impl.Commands.ZonesViolation);
 }
 
+function encodeZonesViolation256Command() {
+  return message_impl.encodeNoDataCommand(
+    Buffer.from([message_impl.Commands.ZonesViolation, 0x00])
+  );
+}
+
 function encodeZonesTamperCommand() {
   return message_impl.encodeNoDataCommand(message_impl.Commands.ZonesTamper);
+}
+
+function encodeZonesTamper256Command() {
+  return message_impl.encodeNoDataCommand(
+    Buffer.from([message_impl.Commands.ZonesTamper, 0x00])
+  );
 }
 
 function encodeZonesAlarmCommand() {
   return message_impl.encodeNoDataCommand(message_impl.Commands.ZonesAlarm);
 }
 
+function encodeZonesAlarm256Command() {
+  return message_impl.encodeNoDataCommand(
+    Buffer.from([message_impl.Commands.ZonesAlarm, 0x00])
+  );
+}
+
 function encodeZonesTamperAlarmCommand() {
   return message_impl.encodeNoDataCommand(
     message_impl.Commands.ZonesTamperAlarm
+  );
+}
+
+function encodeZonesTamperAlarm256Command() {
+  return message_impl.encodeNoDataCommand(
+    Buffer.from([message_impl.Commands.ZonesTamperAlarm, 0x00])
   );
 }
 
@@ -27,9 +51,21 @@ function encodeZonesAlarmMemoryCommand() {
   );
 }
 
+function encodeZonesAlarmMemory256Command() {
+  return message_impl.encodeNoDataCommand(
+    Buffer.from([message_impl.Commands.ZonesAlarmMemory, 0x00])
+  );
+}
+
 function encodeZonesTamperAlarmMemoryCommand() {
   return message_impl.encodeNoDataCommand(
     message_impl.Commands.ZonesTamperAlarmMemory
+  );
+}
+
+function encodeZonesTamperAlarmMemory256Command() {
+  return message_impl.encodeNoDataCommand(
+    Buffer.from([message_impl.Commands.ZonesTamperAlarmMemory, 0x00])
   );
 }
 
@@ -39,15 +75,33 @@ function encodeZonesBypassStatusCommand() {
   );
 }
 
+function encodeZonesBypassStatus256Command() {
+  return message_impl.encodeNoDataCommand(
+    Buffer.from([message_impl.Commands.ZonesBypassStatus, 0x00])
+  );
+}
+
 function encodeZonesNoViolationTroubleCommand() {
   return message_impl.encodeNoDataCommand(
     message_impl.Commands.ZonesNoViolationTrouble
   );
 }
 
+function encodeZonesNoViolationTrouble256Command() {
+  return message_impl.encodeNoDataCommand(
+    Buffer.from([message_impl.Commands.ZonesNoViolationTrouble, 0x00])
+  );
+}
+
 function encodeZonesLongViolationTroubleCommand() {
   return message_impl.encodeNoDataCommand(
     message_impl.Commands.ZonesLongViolationTrouble
+  );
+}
+
+function encodeZonesLongViolationTrouble256Command() {
+  return message_impl.encodeNoDataCommand(
+    Buffer.from([message_impl.Commands.ZonesLongViolationTrouble, 0x00])
   );
 }
 
@@ -141,8 +195,20 @@ function encodeZonesIsolateStateCommand() {
   );
 }
 
+function encodeZonesIsolateState256Command() {
+  return message_impl.encodeNoDataCommand(
+    Buffer.from([message_impl.Commands.ZonesIsolateState, 0x00])
+  );
+}
+
 function encodeZonesMaskedCommand() {
   return message_impl.encodeNoDataCommand(message_impl.Commands.ZonesMasked);
+}
+
+function encodeZonesMasked256Command() {
+  return message_impl.encodeNoDataCommand(
+    Buffer.from([message_impl.Commands.ZonesMasked, 0x00])
+  );
 }
 
 function encodeZonesMaskedMemoryCommand() {
@@ -151,8 +217,20 @@ function encodeZonesMaskedMemoryCommand() {
   );
 }
 
+function encodeZonesMaskedMemory256Command() {
+  return message_impl.encodeNoDataCommand(
+    Buffer.from([message_impl.Commands.ZonesMaskedMemory, 0x00])
+  );
+}
+
 function encodeOutputsStateCommand() {
   return message_impl.encodeNoDataCommand(message_impl.Commands.OutputsState);
+}
+
+function encodeOutputsState256Command() {
+  return message_impl.encodeNoDataCommand(
+    Buffer.from([message_impl.Commands.OutputsState, 0x00])
+  );
 }
 
 function encodeNewDataCommand() {
@@ -848,6 +926,7 @@ module.exports = {
   encodeOutputsOffCommand,
   encodeOutputsOnCommand,
   encodeOutputsStateCommand,
+  encodeOutputsState256Command,
   encodeOutputsSwitchCommand,
   encodePartitionsAlarmCommand,
   encodePartitionsAlarmMemoryCommand,
@@ -862,20 +941,32 @@ module.exports = {
   encodePartitionsTemporaryBlockedCommand,
   encodePartitionsWith1stCodeEnteredCommand,
   encodeZonesAlarmCommand,
+  encodeZonesAlarm256Command,
   encodeZonesAlarmMemoryCommand,
+  encodeZonesAlarmMemory256Command,
   encodeZonesBypassCommand,
   encodeZonesBypassStatusCommand,
+  encodeZonesBypassStatus256Command,
   encodeZonesIsolateCommand,
   encodeZonesIsolateStateCommand,
+  encodeZonesIsolateState256Command,
   encodeZonesLongViolationTroubleCommand,
+  encodeZonesLongViolationTrouble256Command,
   encodeZonesMaskedCommand,
+  encodeZonesMasked256Command,
   encodeZonesMaskedMemoryCommand,
+  encodeZonesMaskedMemory256Command,
   encodeZonesNoViolationTroubleCommand,
+  encodeZonesNoViolationTrouble256Command,
   encodeZonesTamperAlarmCommand,
+  encodeZonesTamperAlarm256Command,
   encodeZonesTamperAlarmMemoryCommand,
+  encodeZonesTamperAlarmMemory256Command,
   encodeZonesTamperCommand,
+  encodeZonesTamper256Command,
   encodeZonesUnbypassCommand,
   encodeZonesViolationCommand,
+  encodeZonesViolation256Command,
   ArmedPartitionsReallyAnswer,
   ArmedPartitionsSuppressedAnswer,
   CommandResultAnswer,

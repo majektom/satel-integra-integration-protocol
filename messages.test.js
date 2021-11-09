@@ -126,6 +126,69 @@ describe("Message encoding unit tests", function () {
       assert.strictEqual(frame[2], test.command);
     });
   });
+  let noDataCommand256Tests = [
+    {
+      func: messages.encodeZonesViolation256Command,
+      command: messages_impl.Commands.ZonesViolation,
+    },
+    {
+      func: messages.encodeZonesTamper256Command,
+      command: messages_impl.Commands.ZonesTamper,
+    },
+    {
+      func: messages.encodeZonesAlarm256Command,
+      command: messages_impl.Commands.ZonesAlarm,
+    },
+    {
+      func: messages.encodeZonesTamperAlarm256Command,
+      command: messages_impl.Commands.ZonesTamperAlarm,
+    },
+    {
+      func: messages.encodeZonesAlarmMemory256Command,
+      command: messages_impl.Commands.ZonesAlarmMemory,
+    },
+    {
+      func: messages.encodeZonesTamperAlarmMemory256Command,
+      command: messages_impl.Commands.ZonesTamperAlarmMemory,
+    },
+    {
+      func: messages.encodeZonesBypassStatus256Command,
+      command: messages_impl.Commands.ZonesBypassStatus,
+    },
+    {
+      func: messages.encodeZonesNoViolationTrouble256Command,
+      command: messages_impl.Commands.ZonesNoViolationTrouble,
+    },
+    {
+      func: messages.encodeZonesLongViolationTrouble256Command,
+      command: messages_impl.Commands.ZonesLongViolationTrouble,
+    },
+    {
+      func: messages.encodeOutputsState256Command,
+      command: messages_impl.Commands.OutputsState,
+    },
+    {
+      func: messages.encodeZonesIsolateState256Command,
+      command: messages_impl.Commands.ZonesIsolateState,
+    },
+    {
+      func: messages.encodeZonesMasked256Command,
+      command: messages_impl.Commands.ZonesMasked,
+    },
+    {
+      func: messages.encodeZonesMaskedMemory256Command,
+      command: messages_impl.Commands.ZonesMaskedMemory,
+    },
+  ];
+
+  noDataCommand256Tests.forEach(function (test) {
+    it(test.func.name + "()", function () {
+      const frame = test.func();
+      assert.strictEqual(frame.length, 8);
+      assert.strictEqual(frame[2], test.command);
+      assert.strictEqual(frame[3], 0x00);
+    });
+  });
 
   let outputsAndZonesChangeTests = [
     {
